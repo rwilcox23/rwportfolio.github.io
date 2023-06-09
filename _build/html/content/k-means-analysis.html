@@ -1,0 +1,1022 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Exploring School Performance Data with Python and Data Science using k-means clustering &#8212; Coding and Data Science Portfolio</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'content/k-means-analysis';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Calculating Mutual Information Index by Race" href="mutual-information-index.html" />
+    <link rel="prev" title="Calculating Dissimilarity Indices" href="dissimilarity-index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to my digital portfolio!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Resume</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="resume.html">Robert Wilcox</a></li>
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebooks</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="atkinson-segregation-index.html">Analyzing Segregation in NYC Schools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditions-and-two-way-anova.html">Checking Conditions for Two-Way ANOVA and Non-Parametric Alternatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dissimilarity-index.html">Calculating Dissimilarity Indices</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Exploring School Performance Data with Python and Data Science using <em>k-means clustering</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="mutual-information-index.html">Calculating Mutual Information Index by Race</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time-series-analysis.html">Time-Series Analysis</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/rwilcox23/rwportfolio.github.io" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/rwilcox23/rwportfolio.github.io/issues/new?title=Issue%20on%20page%20%2Fcontent/k-means-analysis.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/content/k-means-analysis.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Exploring School Performance Data with Python and Data Science using k-means clustering</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-introduction-u"><u>Introduction</u></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#u-data-preparation-u"><u>Data Preparation</u></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#u-data-analysis-u"><u>Data Analysis</u></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#u-data-cleaning-u"><u>Data Cleaning</u></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#u-clustering-u"><u>Clustering</u></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#u-data-visualization-u"><u>Data Visualization</u></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><u>Data Analysis</u></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#u-cluster-summary-statistics-u"><u>Cluster Summary Statistics</u></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="exploring-school-performance-data-with-python-and-data-science-using-k-means-clustering">
+<h1>Exploring School Performance Data with Python and Data Science using <em>k-means clustering</em><a class="headerlink" href="#exploring-school-performance-data-with-python-and-data-science-using-k-means-clustering" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># install the nycschools package and its requirements</span>
+<span class="o">%</span><span class="k">pip</span> install nycschools
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># discover the data in your Google Drive, or download it to the local Colab</span>
+<span class="c1"># if no suitable data is found</span>
+<span class="kn">from</span> <span class="nn">nycschools</span> <span class="kn">import</span> <span class="n">dataloader</span>
+<span class="n">dataloader</span><span class="o">.</span><span class="n">download_data</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="u-introduction-u">
+<h2><u>Introduction</u><a class="headerlink" href="#u-introduction-u" title="Permalink to this heading">#</a></h2>
+<p>In this tutorial, we will explore how to use Python and data science techniques to manipulate and analyze data related to school performance. Specifically, we will work with data from the New York City public school system, including school demographics and student performance on English Language Arts (ELA) and Math exams. We will use clustering analysis to identify patterns in the data and visualize the results using scatter plots.</p>
+<section id="u-data-preparation-u">
+<h3><u>Data Preparation</u><a class="headerlink" href="#u-data-preparation-u" title="Permalink to this heading">#</a></h3>
+<p>To get started, we will load the necessary Python packages and install any missing dependencies using the %pip magic command:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install nbformat
+<span class="o">%</span><span class="k">pip</span> install plotly
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: nbformat in ./.venv/lib/python3.9/site-packages (5.8.0)
+Requirement already satisfied: fastjsonschema in ./.venv/lib/python3.9/site-packages (from nbformat) (2.16.3)
+Requirement already satisfied: jsonschema&gt;=2.6 in ./.venv/lib/python3.9/site-packages (from nbformat) (4.17.3)
+Requirement already satisfied: jupyter-core in ./.venv/lib/python3.9/site-packages (from nbformat) (5.3.0)
+Requirement already satisfied: traitlets&gt;=5.1 in ./.venv/lib/python3.9/site-packages (from nbformat) (5.9.0)
+Requirement already satisfied: attrs&gt;=17.4.0 in ./.venv/lib/python3.9/site-packages (from jsonschema&gt;=2.6-&gt;nbformat) (23.1.0)
+Requirement already satisfied: pyrsistent!=0.17.0,!=0.17.1,!=0.17.2,&gt;=0.14.0 in ./.venv/lib/python3.9/site-packages (from jsonschema&gt;=2.6-&gt;nbformat) (0.19.3)
+Requirement already satisfied: platformdirs&gt;=2.5 in ./.venv/lib/python3.9/site-packages (from jupyter-core-&gt;nbformat) (3.5.0)
+Note: you may need to restart the kernel to use updated packages.
+Requirement already satisfied: plotly in ./.venv/lib/python3.9/site-packages (5.14.1)
+Requirement already satisfied: tenacity&gt;=6.2.0 in ./.venv/lib/python3.9/site-packages (from plotly) (8.2.2)
+Requirement already satisfied: packaging in ./.venv/lib/python3.9/site-packages (from plotly) (23.1)
+Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will then import the necessary libraries for data manipulation, analysis, and visualization:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">nycschools</span> <span class="kn">import</span> <span class="n">schools</span><span class="p">,</span> <span class="n">exams</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we will load the school demographics and exam data using the schools and exams functions from the nycschools package:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">demo</span> <span class="o">=</span> <span class="n">schools</span><span class="o">.</span><span class="n">load_school_demographics</span><span class="p">()</span>
+<span class="n">ela</span> <span class="o">=</span> <span class="n">exams</span><span class="o">.</span><span class="n">load_ela</span><span class="p">()</span>
+<span class="n">math</span> <span class="o">=</span> <span class="n">exams</span><span class="o">.</span><span class="n">load_math</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will then merge the ELA and Math exam data based on common columns, and rename columns for clarity:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ela_math</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">ela</span><span class="p">,</span> <span class="n">math</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span> <span class="s1">&#39;grade&#39;</span><span class="p">,</span><span class="s1">&#39;test_year&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">ela_math</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;_x&#39;</span><span class="p">):</span>
+        <span class="n">new_col_name</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_x&#39;</span><span class="p">,</span> <span class="s1">&#39;_ela&#39;</span><span class="p">)</span>
+        <span class="n">ela_math</span> <span class="o">=</span> <span class="n">ela_math</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="n">new_col_name</span><span class="p">})</span>
+    <span class="k">elif</span> <span class="n">col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;_y&#39;</span><span class="p">):</span>
+        <span class="n">new_col_name</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_y&#39;</span><span class="p">,</span> <span class="s1">&#39;_math&#39;</span><span class="p">)</span>
+        <span class="n">ela_math</span> <span class="o">=</span> <span class="n">ela_math</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="n">new_col_name</span><span class="p">})</span>
+
+
+<span class="n">ela_math</span> <span class="o">=</span> <span class="n">ela_math</span><span class="p">[[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span> <span class="s1">&#39;ay_ela&#39;</span><span class="p">,</span> <span class="s1">&#39;test_year&#39;</span><span class="p">,</span> <span class="s1">&#39;grade&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;number_tested_ela&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_scale_score_ela&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;number_tested_math&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_scale_score_math&#39;</span><span class="p">]]</span>
+
+<span class="n">ela_math</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;mean_scale_score_ela&#39;</span><span class="p">:</span> <span class="s1">&#39;mean_score_ela&#39;</span><span class="p">,</span> <span class="s1">&#39;ay_ela&#39;</span><span class="p">:</span> <span class="s1">&#39;ay&#39;</span><span class="p">,</span> <span class="s1">&#39;number_tested_ela&#39;</span><span class="p">:</span> <span class="s1">&#39;num_tested_ela&#39;</span><span class="p">,</span><span class="s1">&#39;number_tested_math&#39;</span><span class="p">:</span> <span class="s1">&#39;num_tested_math&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_scale_score_math&#39;</span><span class="p">:</span> <span class="s1">&#39;mean_score_math&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will also select specific columns from the school demographics data and merge it with the ELA and Math exam data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">demo</span> <span class="o">=</span> <span class="n">demo</span><span class="p">[[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span> <span class="s1">&#39;beds&#39;</span><span class="p">,</span> <span class="s1">&#39;district&#39;</span><span class="p">,</span> <span class="s1">&#39;geo_district&#39;</span><span class="p">,</span> <span class="s1">&#39;boro&#39;</span><span class="p">,</span> <span class="s1">&#39;school_name&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;short_name&#39;</span><span class="p">,</span> <span class="s1">&#39;ay&#39;</span><span class="p">,</span> <span class="s1">&#39;school_type&#39;</span><span class="p">,</span> <span class="s1">&#39;total_enrollment&#39;</span><span class="p">,</span> <span class="s1">&#39;zip&#39;</span><span class="p">,</span> <span class="s1">&#39;asian_pct&#39;</span><span class="p">,</span> 
+       <span class="s1">&#39;black_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;hispanic_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;multi_racial_pct&#39;</span><span class="p">,</span><span class="s1">&#39;native_american_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;white_pct&#39;</span><span class="p">]]</span>
+<span class="n">demo_math_ela</span> <span class="o">=</span> <span class="n">demo</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">ela_math</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dbn&quot;</span><span class="p">,</span> <span class="s2">&quot;ay&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Lastly, we will rename the demo_math_ela dataframe to data and choose/reorder columns for analysis:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">demo_math_ela</span><span class="p">[[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span><span class="s1">&#39;beds&#39;</span><span class="p">,</span> <span class="s1">&#39;ay&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;test_year&#39;</span><span class="p">,</span><span class="s1">&#39;district&#39;</span><span class="p">,</span> <span class="s1">&#39;geo_district&#39;</span><span class="p">,</span> <span class="s1">&#39;boro&#39;</span><span class="p">,</span> <span class="s1">&#39;school_name&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;short_name&#39;</span><span class="p">,</span> <span class="s1">&#39;school_type&#39;</span><span class="p">,</span> <span class="s1">&#39;zip&#39;</span><span class="p">,</span> <span class="s1">&#39;total_enrollment&#39;</span><span class="p">,</span> <span class="s1">&#39;asian_pct&#39;</span><span class="p">,</span> 
+       <span class="s1">&#39;black_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;hispanic_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;multi_racial_pct&#39;</span><span class="p">,</span><span class="s1">&#39;native_american_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;white_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;grade&#39;</span><span class="p">,</span> <span class="s1">&#39;num_tested_ela&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;mean_score_ela&#39;</span><span class="p">,</span> <span class="s1">&#39;num_tested_math&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_math&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="u-data-analysis-u">
+<h3><u>Data Analysis</u><a class="headerlink" href="#u-data-analysis-u" title="Permalink to this heading">#</a></h3>
+<p>Now that we have our data loaded and merged, we can start analyzing it. Our goal is to identify patterns in the data that can help us understand how different schools with similar student populations are performing.</p>
+<p>In the next cell, we will import all the necessary Python libraries for data analysis and visualization:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="u-data-cleaning-u">
+<h4><u>Data Cleaning</u><a class="headerlink" href="#u-data-cleaning-u" title="Permalink to this heading">#</a></h4>
+<p>Before we can perform any analysis, we need to clean the data and prepare it for clustering. We will filter the data to only include observations from the 2018 school year, grade 5, and all students:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;test_year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2018</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;grade&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;4&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;All Students&#39;</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will then select the relevant columns for clustering:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cluster_data</span> <span class="o">=</span> <span class="n">filtered_data</span><span class="p">[[</span><span class="s1">&#39;asian_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;black_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;hispanic_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;multi_racial_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;native_american_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;white_pct&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will drop any missing values from the data and standardize the variables using StandardScaler to ensure that each variable has a mean of 0 and standard deviation of 1:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># drop rows with missing values</span>
+<span class="n">cluster_data</span> <span class="o">=</span> <span class="n">cluster_data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="c1"># standardize the data</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">scaled_data</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">cluster_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="u-clustering-u">
+<h4><u>Clustering</u><a class="headerlink" href="#u-clustering-u" title="Permalink to this heading">#</a></h4>
+<p>Clustering is an unsupervised machine learning technique that involves grouping similar observations together into clusters. The goal of clustering is to identify patterns and structure in the data, and to partition the data into groups based on similarity.</p>
+<p>In this tutorial, we will use K-Means clustering to group schools based on student performance on ELA and Math exams. K-Means is a popular clustering algorithm that works by partitioning the data into K clusters, where K is a user-defined parameter. The algorithm starts by randomly assigning each observation to a cluster, and then iteratively updates the cluster centers and reassigns observations to the closest cluster until convergence.</p>
+<p>Before we can perform clustering, we need to prepare the data by selecting relevant features and standardizing the variables. In this tutorial, we will select the percentages of students in each racial category (Asian, Black, Hispanic, Multi-Racial, Native American, and White) as the features for clustering. We will also standardize the data using StandardScaler to ensure that all variables have a mean of 0 and a standard deviation of 1.</p>
+<p>To determine the optimal number of clusters for our data, we will use the elbow method. The elbow method involves plotting the within-cluster sum of squares (WCSS) as a function of the number of clusters, and selecting the number of clusters at the “elbow” of the curve. The elbow represents the point of diminishing returns, where adding more clusters does not significantly reduce the WCSS.</p>
+<p>In this tutorial, we will use matplotlib.pyplot to create the elbow plot:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize an empty list to store the within-cluster sum of squares (WCSS)</span>
+<span class="n">wcss</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Set the range of possible cluster numbers to test</span>
+<span class="n">max_clusters</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_clusters</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;k-means++&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">scaled_data</span><span class="p">)</span>
+    <span class="n">wcss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">inertia_</span><span class="p">)</span>
+
+<span class="c1"># Plot the elbow graph</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_clusters</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">wcss</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Elbow Method&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Number of clusters&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Within-Cluster Sum of Squares (WCSS)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8629b825d64b2143e71c1130b9bc78d39a2c1783e59374a1197aa1c998744d32.png" src="../_images/8629b825d64b2143e71c1130b9bc78d39a2c1783e59374a1197aa1c998744d32.png" />
+</div>
+</div>
+<p>Based on the elbow plot, we will choose 6 clusters for our analysis. We will then perform K-Means clustering on the scaled data using 6 clusters:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Choose the optimal number of clusters (k) based on the elbow graph</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">6</span>
+
+<span class="c1"># Initialize the k-means model and fit it to the data</span>
+<span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">scaled_data</span><span class="p">)</span>
+
+<span class="c1"># Assign the cluster labels to each data point</span>
+<span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will add the cluster labels back to our filtered data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;cluster&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_labels</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="u-data-visualization-u">
+<h4><u>Data Visualization</u><a class="headerlink" href="#u-data-visualization-u" title="Permalink to this heading">#</a></h4>
+<p>After clustering, we can visualize the results using scatter plots. Scatter plots are a useful visualization tool for exploring relationships between two continuous variables.</p>
+<p>In this tutorial, we will create two scatter plots: one using matplotlib.pyplot and one using plotly.express. The matplotlib.pyplot scatter plot will show the relationship between mean Math and ELA scores for each cluster, while the plotly.express scatter plot will show the same information but with the addition of interactivity with school names and cluster labels.</p>
+<p>Here’s the code for the matplotlib.pyplot scatter plot:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a new DataFrame with the mean_score_ela, mean_score_math, and cluster labels</span>
+<span class="n">plot_data</span> <span class="o">=</span> <span class="n">filtered_data</span><span class="p">[[</span><span class="s1">&#39;mean_score_ela&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_math&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_labels</span>
+
+<span class="c1"># Visualize the clusters using a scatterplot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="s1">&#39;pink&#39;</span><span class="p">,</span> <span class="s1">&#39;cyan&#39;</span><span class="p">,</span> <span class="s1">&#39;brown&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">plot_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">,</span> <span class="s1">&#39;mean_score_math&#39;</span><span class="p">],</span> <span class="n">plot_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">,</span> <span class="s1">&#39;mean_score_ela&#39;</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Cluster </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Mean Score Math&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Mean Score ELA&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;K-Means Clustering Visualization&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/73e32921d9f34ef079efdb592e5553cd914772681f481c1beab323ee4703f931.png" src="../_images/73e32921d9f34ef079efdb592e5553cd914772681f481c1beab323ee4703f931.png" />
+</div>
+</div>
+<p>And here’s the code for the plotly.express scatter plot:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+
+<span class="c1"># Create a new DataFrame with the mean_score_ela, mean_score_math, and cluster labels</span>
+<span class="n">plot_data</span> <span class="o">=</span> <span class="n">filtered_data</span><span class="p">[[</span><span class="s1">&#39;school_name&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_ela&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_math&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_labels</span>
+<span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>  <span class="c1"># Convert cluster labels to strings for better display in the plot</span>
+
+<span class="c1"># Sort the plot_data DataFrame by the &#39;Cluster&#39; column</span>
+<span class="n">plot_data</span> <span class="o">=</span> <span class="n">plot_data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Cluster&#39;</span><span class="p">)</span>
+
+<span class="c1"># Create the interactive scatterplot</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">plot_data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;mean_score_math&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;mean_score_ela&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;Cluster&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;K-Means Clustering Visualization&#39;</span><span class="p">,</span>
+                 <span class="n">hover_data</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;school_name&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_math&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_ela&#39;</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span> <span class="n">size_max</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># Set x-axis and y-axis titles</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Mean Score Math&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Mean Score ELA&#39;</span><span class="p">)</span>
+
+<span class="c1"># Center the title</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;K-Means Clustering Visualization&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.5</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Show the interactive scatterplot</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">plotly.express</span></code> scatter plot has some additional features that are not present in the <code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> scatter plot. For example, the <code class="docutils literal notranslate"><span class="pre">plotly.express</span></code> plot includes school names and cluster labels in the hover data, which can be useful for identifying individual schools and understanding the patterns in the data.  Additionally, you are able to select and deselect clusters to improve visability.</p>
+<p>Overall, clustering and visualization are powerful tools for analyzing data and identifying patterns and structure. By using K-Means clustering and scatter plots, we were able to identify 6 distinct clusters of schools based similarities in their student populations, and to visualize the relationship between mean Math and ELA scores for each cluster. These insights can be used to inform policy and practice in the education sector, and to support efforts to improve student outcomes.</p>
+</section>
+</section>
+<section id="id1">
+<h3><u>Data Analysis</u><a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<section id="u-cluster-summary-statistics-u">
+<h4><u>Cluster Summary Statistics</u><a class="headerlink" href="#u-cluster-summary-statistics-u" title="Permalink to this heading">#</a></h4>
+<p>After performing K-Means clustering on the data, we can calculate summary statistics for each cluster to better understand the characteristics of each group. In this tutorial, we will use <code class="docutils literal notranslate"><span class="pre">tabulate</span></code> to create a nicely formatted table of cluster summary statistics.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tabulate</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>First, we will create a new DataFrame with only the numeric columns (i.e., the racial percentages and cluster labels) from our filtered data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">numeric_data</span> <span class="o">=</span> <span class="n">filtered_data</span><span class="p">[[</span><span class="s1">&#39;asian_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;black_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;hispanic_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;multi_racial_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;native_american_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;white_pct&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_ela&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_math&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we group the numeric_data DataFrame by cluster labels using the <code class="docutils literal notranslate"><span class="pre">groupby</span></code> method, and calculate the mean for each feature using the <code class="docutils literal notranslate"><span class="pre">mean</span></code> method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cluster_summary</span> <span class="o">=</span> <span class="n">numeric_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span>
+    <span class="s1">&#39;asian_pct&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;black_pct&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;hispanic_pct&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;multi_racial_pct&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;native_american_pct&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;white_pct&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;mean_score_ela&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;mean_score_math&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cluster_summary</span> <span class="o">=</span> <span class="n">cluster_summary</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">cluster_summary</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cluster</th>
+      <th>asian_pct</th>
+      <th>black_pct</th>
+      <th>hispanic_pct</th>
+      <th>multi_racial_pct</th>
+      <th>native_american_pct</th>
+      <th>white_pct</th>
+      <th>mean_score_ela</th>
+      <th>mean_score_math</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>0.051938</td>
+      <td>0.186527</td>
+      <td>0.707450</td>
+      <td>0.005490</td>
+      <td>0.008173</td>
+      <td>0.039935</td>
+      <td>596.669298</td>
+      <td>595.251397</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.0</td>
+      <td>0.030381</td>
+      <td>0.680382</td>
+      <td>0.236706</td>
+      <td>0.008686</td>
+      <td>0.011256</td>
+      <td>0.032062</td>
+      <td>599.267711</td>
+      <td>598.022696</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2.0</td>
+      <td>0.146550</td>
+      <td>0.072698</td>
+      <td>0.276034</td>
+      <td>0.019000</td>
+      <td>0.005174</td>
+      <td>0.479953</td>
+      <td>608.688885</td>
+      <td>607.104221</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3.0</td>
+      <td>0.573324</td>
+      <td>0.048074</td>
+      <td>0.223778</td>
+      <td>0.011250</td>
+      <td>0.009046</td>
+      <td>0.134481</td>
+      <td>608.395874</td>
+      <td>609.675596</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4.0</td>
+      <td>0.125323</td>
+      <td>0.124585</td>
+      <td>0.199062</td>
+      <td>0.079277</td>
+      <td>0.003692</td>
+      <td>0.466323</td>
+      <td>616.164470</td>
+      <td>611.932668</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>5.0</td>
+      <td>0.303056</td>
+      <td>0.306944</td>
+      <td>0.222444</td>
+      <td>0.010000</td>
+      <td>0.130222</td>
+      <td>0.027056</td>
+      <td>602.588040</td>
+      <td>601.767819</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Finally, we will use <code class="docutils literal notranslate"><span class="pre">tabulate</span></code> to create a formatted table from the cluster_summary DataFrame.  The <code class="docutils literal notranslate"><span class="pre">tabulate.tabulate</span></code> function takes several arguments to customize the table formatting, including the table format (‘fancy_grid’ in this case), whether to show row indices (<code class="docutils literal notranslate"><span class="pre">True</span></code> in this case), and how to align numeric and string data (<code class="docutils literal notranslate"><span class="pre">numalign='center'</span></code> and <code class="docutils literal notranslate"><span class="pre">stralign='center'</span></code> in this case).</p>
+<p>We also use the <code class="docutils literal notranslate"><span class="pre">str.format</span></code> method to format the numeric data in the table to 6 decimal places:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a nicely formatted table from the cluster_summary DataFrame</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">tabulate</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span><span class="n">cluster_summary</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">cluster_summary</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;fancy_grid&#39;</span><span class="p">,</span> <span class="n">showindex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">numalign</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">stralign</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">format</span><span class="p">({</span><span class="n">col</span><span class="p">:</span> <span class="s1">&#39;{.6f}&#39;</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cluster_summary</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="o">!=</span> <span class="s1">&#39;Cluster&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we print the table using the <code class="docutils literal notranslate"><span class="pre">print</span></code> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print the table</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cluster Summary Statistics</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cluster Summary Statistics
+
+╒════╤═══════════╤═════════════╤═════════════╤════════════════╤════════════════════╤═══════════════════════╤═════════════╤══════════════════╤═══════════════════╕
+│    │  cluster  │  asian_pct  │  black_pct  │  hispanic_pct  │  multi_racial_pct  │  native_american_pct  │  white_pct  │  mean_score_ela  │  mean_score_math  │
+╞════╪═══════════╪═════════════╪═════════════╪════════════════╪════════════════════╪═══════════════════════╪═════════════╪══════════════════╪═══════════════════╡
+│ 0  │     0     │  0.0519385  │  0.186527   │    0.70745     │     0.00549029     │       0.0081732       │  0.039935   │     596.669      │      595.251      │
+├────┼───────────┼─────────────┼─────────────┼────────────────┼────────────────────┼───────────────────────┼─────────────┼──────────────────┼───────────────────┤
+│ 1  │     1     │  0.0303809  │  0.680382   │    0.236706    │     0.00868586     │       0.0112561       │  0.0320623  │     599.268      │      598.023      │
+├────┼───────────┼─────────────┼─────────────┼────────────────┼────────────────────┼───────────────────────┼─────────────┼──────────────────┼───────────────────┤
+│ 2  │     2     │   0.14655   │  0.072698   │    0.276034    │       0.019        │       0.0051745       │  0.479953   │     608.689      │      607.104      │
+├────┼───────────┼─────────────┼─────────────┼────────────────┼────────────────────┼───────────────────────┼─────────────┼──────────────────┼───────────────────┤
+│ 3  │     3     │  0.573324   │  0.0480741  │    0.223778    │      0.01125       │       0.0090463       │  0.134481   │     608.396      │      609.676      │
+├────┼───────────┼─────────────┼─────────────┼────────────────┼────────────────────┼───────────────────────┼─────────────┼──────────────────┼───────────────────┤
+│ 4  │     4     │  0.125323   │  0.124585   │    0.199062    │     0.0792769      │      0.00369231       │  0.466323   │     616.164      │      611.933      │
+├────┼───────────┼─────────────┼─────────────┼────────────────┼────────────────────┼───────────────────────┼─────────────┼──────────────────┼───────────────────┤
+│ 5  │     5     │  0.303056   │  0.306944   │    0.222444    │        0.01        │       0.130222        │  0.0270556  │     602.588      │      601.768      │
+╘════╧═══════════╧═════════════╧═════════════╧════════════════╧════════════════════╧═══════════════════════╧═════════════╧══════════════════╧═══════════════════╛
+</pre></div>
+</div>
+</div>
+</div>
+<p>The cluster summary statistics table provides insights into the demographic characteristics and academic performance of each cluster. Each row represents a cluster, and the columns show the mean percentage of students in each race/ethnicity category, as well as the mean ELA and Math scores for each cluster.</p>
+<p>For example, Cluster 0 has the highest percentage of Hispanic students (71%) and the lowest percentage of multiracial students (0.5%). This cluster obtained the lowest mean ELA score (597.0), and the lowest mean Math score (594.8).</p>
+<p>Cluster 5 has the highest percentage of multiracial students (7.9%) and the lowest percentage of Native American students (0.3%), while having a relativerly high percentage of white students (47.6%). Cluster 5 obtained the greatest mean ELA score and the greatest mean Math score at 616.2 and 614.5, respectively.</p>
+<p>These cluster summary statistics can be used to inform further analysis and decision-making, such as identifying areas for improvement and targeting resources to specific student populations.</p>
+</section>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./content"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dissimilarity-index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Calculating Dissimilarity Indices</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="mutual-information-index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Calculating Mutual Information Index by Race</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-introduction-u"><u>Introduction</u></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#u-data-preparation-u"><u>Data Preparation</u></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#u-data-analysis-u"><u>Data Analysis</u></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#u-data-cleaning-u"><u>Data Cleaning</u></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#u-clustering-u"><u>Clustering</u></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#u-data-visualization-u"><u>Data Visualization</u></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><u>Data Analysis</u></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#u-cluster-summary-statistics-u"><u>Cluster Summary Statistics</u></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Robert Wilcox
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

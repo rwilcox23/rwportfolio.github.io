@@ -1,0 +1,19 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro.md
+parts:
+  - caption: Resume
+    chapters:
+      - file: content/resume.md
+
+  - caption: Notebooks
+    chapters:
+      - file: content/atkinson-segregation-index.ipynb
+      - file: content/conditions-and-two-way-anova.ipynb
+      - file: content/dissimilarity-index.ipynb
+      - file: content/k-means-analysis.ipynb
+      - file: content/mutual-information-index.ipynb
+      - file: content/time-series-analysis.ipynb
+
