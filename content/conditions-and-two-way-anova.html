@@ -1,0 +1,1943 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Checking Conditions for Two-Way ANOVA and Non-Parametric Alternatives &#8212; Coding and Data Science Portfolio</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'content/conditions-and-two-way-anova';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Calculating Dissimilarity Indices" href="dissimilarity-index.html" />
+    <link rel="prev" title="Analyzing Segregation in NYC Schools" href="atkinson-segregation-index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to my digital portfolio!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Resume</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="resume.html">Robert Wilcox</a></li>
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebooks</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="atkinson-segregation-index.html">Analyzing Segregation in NYC Schools</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Checking Conditions for Two-Way ANOVA and Non-Parametric Alternatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dissimilarity-index.html">Calculating Dissimilarity Indices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="k-means-analysis.html">Exploring School Performance Data with Python and Data Science using <em>k-means clustering</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="mutual-information-index.html">Calculating Mutual Information Index by Race</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time-series-analysis.html">Time-Series Analysis</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/rwilcox23/rwportfolio.github.io" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/rwilcox23/rwportfolio.github.io/issues/new?title=Issue%20on%20page%20%2Fcontent/conditions-and-two-way-anova.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/content/conditions-and-two-way-anova.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Checking Conditions for Two-Way ANOVA and Non-Parametric Alternatives</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-goal-for-this-notebook-is-to-demonstrate-the-following">The goal for this notebook is to demonstrate the following:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-getting-the-data-prepared-u"><u><strong>Getting the Data Prepared</strong></u></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-what-is-two-way-anova-u"><u><strong>What is Two-Way ANOVA?</strong></u></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-why-is-a-two-way-anova-test-appropriate-u"><u><strong>Why is a Two-Way ANOVA Test Appropriate?</strong></u></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-checking-the-conditions-for-a-two-way-anova-test-u"><u><strong>Checking the Conditions for a Two-Way ANOVA Test</strong></u></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#u-checking-for-normality-u"><u><strong>Checking for Normality</strong></u></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#u-checking-for-equal-variances-u"><u><strong>Checking for Equal Variances</strong></u></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#u-checking-for-independence-u"><u><strong>Checking for Independence</strong></u></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="checking-conditions-for-two-way-anova-and-non-parametric-alternatives">
+<h1>Checking Conditions for Two-Way ANOVA and Non-Parametric Alternatives<a class="headerlink" href="#checking-conditions-for-two-way-anova-and-non-parametric-alternatives" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># install the package and its requirements</span>
+<span class="o">%</span><span class="k">pip</span> install nycschools
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># discover the data in your Google Drive, or download it to the local Colab</span>
+<span class="c1"># if no suitable data is found</span>
+<span class="kn">from</span> <span class="nn">nycschools</span> <span class="kn">import</span> <span class="n">dataloader</span>
+<span class="n">dataloader</span><span class="o">.</span><span class="n">download_data</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;/Users/rwilcox/GitHub/newprojectnotebook/school-data&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<section id="the-goal-for-this-notebook-is-to-demonstrate-the-following">
+<h2>The goal for this notebook is to demonstrate the following:<a class="headerlink" href="#the-goal-for-this-notebook-is-to-demonstrate-the-following" title="Permalink to this heading">#</a></h2>
+<font size="3">
+<ul class="simple">
+<li><p>what is Two-Way ANOVA</p></li>
+<li><p>when using a Two-Way ANOVA might be appropriate</p></li>
+<li><p>checking conditions for a Two-Way ANOVA visually and with built-in packages</p></li>
+<li><p>how to run a Two-Way ANOVA (or a non-parametric alternative test) in Python</p></li>
+<li><p>how to interpret the results of a Two-Way ANOVA (or a non-parametric alternative test) in Python</p></li>
+<li><p>running post-hoc tests to determine which groups are different from each other</p></li>
+</ul>
+</font>
+</section>
+<section id="u-getting-the-data-prepared-u">
+<h2><u><strong>Getting the Data Prepared</strong></u><a class="headerlink" href="#u-getting-the-data-prepared-u" title="Permalink to this heading">#</a></h2>
+<p>I will be using the <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> package to run the Two-Way ANOVA. This package requires the data to be in a long format. I will use the <code class="docutils literal notranslate"><span class="pre">melt</span></code> function from the <code class="docutils literal notranslate"><span class="pre">pandas</span></code> package to get the data into the correct format.</p>
+<p>Demonstrations for how to load and manipulate various parts of the <code class="docutils literal notranslate"><span class="pre">nycschools</span></code> dataset can be found throughout earlier parts of this project.  Therefore, I will leave my data preparation work below and commented in a way such that you can follow along if you would like.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import data packages from nycschools module</span>
+<span class="kn">from</span> <span class="nn">nycschools</span> <span class="kn">import</span> <span class="n">schools</span><span class="p">,</span> <span class="n">exams</span><span class="p">,</span> <span class="n">ui</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#load regents data into a DataFrame called &#39;reg&#39;</span>
+<span class="n">reg</span> <span class="o">=</span> <span class="n">exams</span><span class="o">.</span><span class="n">load_regents</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#create a new df &#39;math&#39; that keeps only Common Core Algebra data</span>
+<span class="n">math</span> <span class="o">=</span> <span class="n">reg</span><span class="p">[</span><span class="n">reg</span><span class="p">[</span><span class="s2">&quot;regents_exam&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Common Core Algebra&quot;</span><span class="p">]</span>
+
+<span class="c1">#drop all data for which the &#39;mean_score&#39; was not reported for some reason</span>
+<span class="n">math</span> <span class="o">=</span> <span class="n">math</span><span class="p">[</span><span class="n">math</span><span class="p">[</span><span class="s1">&#39;mean_score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#select only a subset of columns to keep in my &#39;math&#39; df</span>
+<span class="n">math</span> <span class="o">=</span> <span class="n">math</span><span class="p">[[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span> <span class="s1">&#39;regents_exam&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;number_tested&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score&#39;</span><span class="p">,</span> <span class="s1">&#39;test_year&#39;</span><span class="p">,</span> <span class="s1">&#39;ay&#39;</span> <span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="c1">#pivoting rows into columns to make some data easier to use in later analysis</span>
+<span class="n">math_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">math</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;regents_exam&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;number_tested&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reindex</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#renaming the columns after the pivot</span>
+<span class="n">math_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">math_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+<span class="n">math_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">math_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">math_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">math_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#again, selecting a subest of only the columns that I&#39;d like to keep</span>
+<span class="n">math_df</span> <span class="o">=</span> <span class="n">math_df</span><span class="p">[[</span><span class="s1">&#39;number_tested_all_students&#39;</span><span class="p">,</span> <span class="s1">&#39;number_tested_non-swd&#39;</span><span class="p">,</span> <span class="s1">&#39;number_tested_swd&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;mean_score_all_students&#39;</span><span class="p">,</span><span class="s1">&#39;mean_score_non-swd&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_swd&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#ensuring all of the data is numeric and not null</span>
+<span class="n">math_df</span> <span class="o">=</span> <span class="n">math_df</span><span class="o">.</span><span class="n">apply</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+<span class="c1"># math_df = math_df.dropna()</span>
+<span class="n">math_df2</span> <span class="o">=</span> <span class="n">math_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#loading school demographic data into a dataframe named &#39;demo&#39;</span>
+<span class="n">demo</span> <span class="o">=</span> <span class="n">schools</span><span class="o">.</span><span class="n">load_school_demographics</span><span class="p">()</span>
+<span class="n">demo</span> <span class="o">=</span> <span class="n">demo</span><span class="p">[</span><span class="n">schools</span><span class="o">.</span><span class="n">demo</span><span class="o">.</span><span class="n">core_cols</span><span class="p">]</span>
+
+<span class="c1">#making a year column to merge with math data so that demographics align with regents year</span>
+<span class="n">demo</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">demo</span><span class="p">[</span><span class="s1">&#39;ay&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#merging math and demographic dataframes on school dbn and year</span>
+<span class="n">mathdemo</span> <span class="o">=</span> <span class="n">demo</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">math_df2</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dbn&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#subsetting the data to only include the columns I want to keep</span>
+<span class="n">mathdf</span> <span class="o">=</span> <span class="n">mathdemo</span><span class="p">[[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span> <span class="s1">&#39;district&#39;</span><span class="p">,</span> <span class="s1">&#39;geo_district&#39;</span><span class="p">,</span> <span class="s1">&#39;boro&#39;</span><span class="p">,</span> <span class="s1">&#39;school_name&#39;</span><span class="p">,</span> <span class="s1">&#39;ay&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;regents_exam&#39;</span><span class="p">,</span> <span class="s1">&#39;number_tested_all_students&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_all_students&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;number_tested_non-swd&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_non-swd&#39;</span><span class="p">,</span> 
+       <span class="s1">&#39;number_tested_swd&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_swd&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#just taking a look at the data to make sure it looks right</span>
+<span class="n">mathdf</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dbn</th>
+      <th>district</th>
+      <th>geo_district</th>
+      <th>boro</th>
+      <th>school_name</th>
+      <th>ay</th>
+      <th>year</th>
+      <th>regents_exam</th>
+      <th>number_tested_all_students</th>
+      <th>mean_score_all_students</th>
+      <th>number_tested_non-swd</th>
+      <th>mean_score_non-swd</th>
+      <th>number_tested_swd</th>
+      <th>mean_score_swd</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>01M184</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>P.S. 184m Shuang Wen</td>
+      <td>2016</td>
+      <td>2017</td>
+      <td>Common Core Algebra</td>
+      <td>51.0</td>
+      <td>84.823532</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>01M184</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>P.S. 184m Shuang Wen</td>
+      <td>2017</td>
+      <td>2018</td>
+      <td>Common Core Algebra</td>
+      <td>31.0</td>
+      <td>90.806450</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>01M184</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>P.S. 184m Shuang Wen</td>
+      <td>2018</td>
+      <td>2019</td>
+      <td>Common Core Algebra</td>
+      <td>34.0</td>
+      <td>89.588234</td>
+      <td>34.0</td>
+      <td>89.588234</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>01M188</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>P.S. 188 The Island School</td>
+      <td>2016</td>
+      <td>2017</td>
+      <td>Common Core Algebra</td>
+      <td>20.0</td>
+      <td>67.449997</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>01M188</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>P.S. 188 The Island School</td>
+      <td>2017</td>
+      <td>2018</td>
+      <td>Common Core Algebra</td>
+      <td>19.0</td>
+      <td>59.315788</td>
+      <td>19.0</td>
+      <td>59.315788</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#ensuring that no null values are present in the data</span>
+<span class="n">mathdf</span> <span class="o">=</span> <span class="n">mathdf</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mean_score_non-swd&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_swd&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#use a melt function to convert some of our data from wide to long format to make it easier to work with for some analyses</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">mathdf</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span> <span class="s1">&#39;district&#39;</span><span class="p">,</span> <span class="s1">&#39;geo_district&#39;</span><span class="p">,</span> <span class="s1">&#39;boro&#39;</span><span class="p">,</span> <span class="s1">&#39;school_name&#39;</span><span class="p">,</span> <span class="s1">&#39;ay&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span><span class="s1">&#39;regents_exam&#39;</span><span class="p">],</span> 
+              <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;number_tested_all_students&#39;</span><span class="p">,</span> <span class="s1">&#39;number_tested_non-swd&#39;</span><span class="p">,</span> <span class="s1">&#39;number_tested_swd&#39;</span><span class="p">],</span>
+              <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;number_tested&#39;</span><span class="p">)</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">mathdf</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span> <span class="s1">&#39;district&#39;</span><span class="p">,</span> <span class="s1">&#39;geo_district&#39;</span><span class="p">,</span> <span class="s1">&#39;boro&#39;</span><span class="p">,</span> <span class="s1">&#39;school_name&#39;</span><span class="p">,</span> <span class="s1">&#39;ay&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span><span class="s1">&#39;regents_exam&#39;</span><span class="p">],</span> 
+              <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mean_score_all_students&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_non-swd&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_score_swd&#39;</span><span class="p">],</span> 
+              <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;mean_score&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#renaming values in the group column to look the way I want them to</span>
+<span class="n">df1</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;number_tested_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">df2</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;mean_score_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+<span class="c1">#sorting the data by dbn and year to order it and make it easier to read</span>
+<span class="n">df1</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df2</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#merge df1 and df2 and groupby dbn,district, geo_district, boro, school_name, ay, year, regents_exam, group</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dbn&#39;</span><span class="p">,</span> <span class="s1">&#39;district&#39;</span><span class="p">,</span> <span class="s1">&#39;geo_district&#39;</span><span class="p">,</span> <span class="s1">&#39;boro&#39;</span><span class="p">,</span> <span class="s1">&#39;school_name&#39;</span><span class="p">,</span> <span class="s1">&#39;ay&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;regents_exam&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">])</span>
+
+<span class="c1">#take a look at the data to make sure it looks right</span>
+<span class="n">df3</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dbn</th>
+      <th>district</th>
+      <th>geo_district</th>
+      <th>boro</th>
+      <th>school_name</th>
+      <th>ay</th>
+      <th>year</th>
+      <th>regents_exam</th>
+      <th>group</th>
+      <th>number_tested</th>
+      <th>mean_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>01M188</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>P.S. 188 The Island School</td>
+      <td>2018</td>
+      <td>2019</td>
+      <td>Common Core Algebra</td>
+      <td>all_students</td>
+      <td>51.0</td>
+      <td>55.235294</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>01M188</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>P.S. 188 The Island School</td>
+      <td>2018</td>
+      <td>2019</td>
+      <td>Common Core Algebra</td>
+      <td>non-swd</td>
+      <td>38.0</td>
+      <td>55.842106</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>01M188</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>P.S. 188 The Island School</td>
+      <td>2018</td>
+      <td>2019</td>
+      <td>Common Core Algebra</td>
+      <td>swd</td>
+      <td>13.0</td>
+      <td>53.461540</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>01M292</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>Orchard Collegiate Academy</td>
+      <td>2016</td>
+      <td>2017</td>
+      <td>Common Core Algebra</td>
+      <td>all_students</td>
+      <td>53.0</td>
+      <td>67.452827</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>01M292</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>Orchard Collegiate Academy</td>
+      <td>2016</td>
+      <td>2017</td>
+      <td>Common Core Algebra</td>
+      <td>non-swd</td>
+      <td>39.0</td>
+      <td>68.871796</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>01M292</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>Orchard Collegiate Academy</td>
+      <td>2016</td>
+      <td>2017</td>
+      <td>Common Core Algebra</td>
+      <td>swd</td>
+      <td>14.0</td>
+      <td>63.500000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>01M292</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>Orchard Collegiate Academy</td>
+      <td>2017</td>
+      <td>2018</td>
+      <td>Common Core Algebra</td>
+      <td>all_students</td>
+      <td>41.0</td>
+      <td>64.463417</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>01M292</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>Orchard Collegiate Academy</td>
+      <td>2017</td>
+      <td>2018</td>
+      <td>Common Core Algebra</td>
+      <td>non-swd</td>
+      <td>32.0</td>
+      <td>65.750000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>01M292</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Manhattan</td>
+      <td>Orchard Collegiate Academy</td>
+      <td>2017</td>
+      <td>2018</td>
+      <td>Common Core Algebra</td>
+      <td>swd</td>
+      <td>9.0</td>
+      <td>59.888889</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="u-what-is-two-way-anova-u">
+<h2><u><strong>What is Two-Way ANOVA?</strong></u><a class="headerlink" href="#u-what-is-two-way-anova-u" title="Permalink to this heading">#</a></h2>
+<font size="3">
+<p>A two-way ANOVA (analysis of variance) is a statistical test used to compare the means of two or more groups that have been split based on two independent variables (factors). The test examines whether there is a significant difference between the means of the groups, taking into account the influence of both independent variables and their interaction. The null hypothesis for a two-way ANOVA is that there is no significant difference between the means of the groups.</p>
+</font></section>
+<section id="u-why-is-a-two-way-anova-test-appropriate-u">
+<h2><u><strong>Why is a Two-Way ANOVA Test Appropriate?</strong></u><a class="headerlink" href="#u-why-is-a-two-way-anova-test-appropriate-u" title="Permalink to this heading">#</a></h2>
+<font size="3">
+<p>A two-way ANOVA test is appropriate because we want to know if there is a difference in the average Algebra Regents score based on the effect of two independent variables (borough and disability status).  We also want to know if there is an interaction between the two independent variables, meaning do different boroughs obtain different results for students of different disability statuses?</p>
+<p>Running a Two-Way ANOVA test might look something like this:
+</font></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">statsmodels.formula.api</span> <span class="kn">import</span> <span class="n">ols</span>
+
+<span class="c1"># Convert the &#39;boro&#39; and &#39;group&#39; columns to categorical variables</span>
+<span class="n">df3</span><span class="p">[</span><span class="s1">&#39;boro&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;boro&#39;</span><span class="p">])</span>
+<span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">])</span>
+
+<span class="c1"># Fit the two-way ANOVA model with interaction terms</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ols</span><span class="p">(</span><span class="s1">&#39;mean_score ~ C(group) + C(boro) + C(group):C(boro)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df3</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Perform the ANOVA and print the results</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">anova_lm</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Results of two-way ANOVA test:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Results of two-way ANOVA test:
+                         sum_sq      df            F        PR(&gt;F)
+C(group)          126669.946542     2.0  1042.649684  0.000000e+00
+C(boro)            21616.083901     4.0    88.963498  6.791031e-74
+C(group):C(boro)     265.183942     8.0     0.545698  8.226768e-01
+Residual          431527.153409  7104.0          NaN           NaN
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpreting these results might look something like this:</p>
+<ul class="simple">
+<li><p>The p-value for the borough variable is less than 0.05, so we can reject the null hypothesis and conclude that there is a significant difference in the average Algebra Regents score based on borough.</p></li>
+<li><p>The p-value for the disability status variable is less than 0.05, so we can reject the null hypothesis and conclude that there is a significant difference in the average Algebra Regents score based on disability status.</p></li>
+<li><p>The p-value for the interaction between borough and disability status is not less than 0.05, so we fail to reject the null hypothesis and conclude that there is not a significant difference in the average Algebra Regents score based on the interaction between borough and disability status.</p></li>
+</ul>
+<p>However, it is most appropriate to check the conditions for a Two-Way ANOVA test before running the test.  This is because the results of the test are only valid if the conditions are met.  If the conditions are not met, then we should run a non-parametric alternative test instead.  I will demonstrate how to check the conditions for a Two-Way ANOVA test below.  I will also demonstrate how to run a non-parametric alternative test if the conditions are not met.</p>
+</section>
+<section id="u-checking-the-conditions-for-a-two-way-anova-test-u">
+<h2><u><strong>Checking the Conditions for a Two-Way ANOVA Test</strong></u><a class="headerlink" href="#u-checking-the-conditions-for-a-two-way-anova-test-u" title="Permalink to this heading">#</a></h2>
+<p>The conditions for a Two-Way ANOVA test are as follows:</p>
+<ul class="simple">
+<li><p><strong><u>Normality</u>:</strong>  A Two-Way ANOVA Test is a <em>parametric</em> test. This means that the test assumes that the data is normally distributed.  We can check this in one of two ways.  We can check this visually by looking at a histogram of data or a normal probability plot of the residuals.  We can also check this (and some of the other conditions) with a built-in function.  I will demonstrate both methods below.  If the data is not normally distributed, then we should use a non-parametric alternative test instead of a Two-Way ANOVA test.  I will demonstrate how to run a non-parametric alternative test below if the data is not normally distributed.</p></li>
+<li><p><strong><u>Equal Variances</u>:</strong> The variance of the data within each group should be approximately equal. Homogeneity of variance can be checked visually by looking at a boxplot of the residuals.  We can also check this with a built-in function, called a Levene’s Test.  If the residuals do not have the same variance, then we should use a non-parametric alternative test instead of a Two-Way ANOVA test.  I will demonstrate how to check the variance of the residuals below.</p></li>
+<li><p><strong><u>Independence</u>:</strong> The observations are independent within and across the groups.  This means that the observations are not related or repeated.  If the observations are related or repeated, then we should use a repeated measures ANOVA test instead of a Two-Way ANOVA test.  I will not be demonstrating how to run a repeated measures ANOVA test in this notebook.  However, I will demonstrate how to run a non-parametric alternative test if the observations are related or repeated.</p></li>
+</ul>
+<section id="u-checking-for-normality-u">
+<h3><u><strong>Checking for Normality</strong></u><a class="headerlink" href="#u-checking-for-normality-u" title="Permalink to this heading">#</a></h3>
+<p>This is a histogram of the data for <code class="docutils literal notranslate"><span class="pre">mean_score</span></code> across the three groups, <code class="docutils literal notranslate"><span class="pre">all_students</span></code>, <code class="docutils literal notranslate"><span class="pre">non-swd</span></code> students, and <code class="docutils literal notranslate"><span class="pre">swd</span></code> students.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics.gofplots</span> <span class="kn">import</span> <span class="n">ProbPlot</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Create histograms of mean scores for each group</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">df3</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;mean_score&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d44cd5b1dea24c3a429ce3ed0abc54fb18961a7dea696ace7228182e6487e9ba.png" src="../_images/d44cd5b1dea24c3a429ce3ed0abc54fb18961a7dea696ace7228182e6487e9ba.png" />
+</div>
+</div>
+<p>From the look of things, it appears that most of the distributions are skewed to the right to varying degrees and, thus, are non-normal. However, we can check this with a normal probability plot of the residuals.  If the residuals are normally distributed, then the data is normally distributed.  I will demonstrate how to check this below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create normal probability plots for each group</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">group_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()):</span>
+    <span class="n">group_data</span> <span class="o">=</span> <span class="n">df3</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group_name</span><span class="p">,</span> <span class="s1">&#39;mean_score&#39;</span><span class="p">]</span>
+    <span class="n">qq</span> <span class="o">=</span> <span class="n">ProbPlot</span><span class="p">(</span><span class="n">group_data</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">qq</span><span class="o">.</span><span class="n">qqplot</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">group_name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> group&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/rwilcox/GitHub/newprojectnotebook/.venv/lib/python3.9/site-packages/statsmodels/graphics/gofplots.py:1045: UserWarning: color is redundantly defined by the &#39;color&#39; keyword argument and the fmt string &quot;b&quot; (-&gt; color=(0.0, 0.0, 1.0, 1)). The keyword argument will take precedence.
+  ax.plot(x, y, fmt, **plot_style)
+</pre></div>
+</div>
+<img alt="../_images/5a68ecc97b5054b33ce49b82a86a6931b9bb20edc1c52a83814a3f9f01dac9f4.png" src="../_images/5a68ecc97b5054b33ce49b82a86a6931b9bb20edc1c52a83814a3f9f01dac9f4.png" />
+</div>
+</div>
+<p>To interpret a normal probability plot, we want to see the data points fall along the red line.  If the data points fall along the red line, then the data is normally distributed.  If the data points do not fall along the red line, then the data is not normally distributed.</p>
+<p>Therefore, the curvature of the data points in the normal probability plot above seems to  indicate that the data is not normally distributed.  However, to be more certain, we can check the normality of the residuals with a built-in function, called a Shapiro-Wilk test.  I will demonstrate how to do this below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">shapiro</span><span class="p">,</span> <span class="n">levene</span>
+
+<span class="c1"># Subset the data</span>
+<span class="n">non_swd</span> <span class="o">=</span> <span class="n">df3</span><span class="p">[</span><span class="n">df3</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;non-swd&quot;</span><span class="p">]</span>
+<span class="n">swd</span> <span class="o">=</span> <span class="n">df3</span><span class="p">[</span><span class="n">df3</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;swd&quot;</span><span class="p">]</span>
+
+<span class="c1"># Check the normality assumption using the Shapiro-Wilk test</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">non_swd_norm_p</span> <span class="o">=</span> <span class="n">shapiro</span><span class="p">(</span><span class="n">non_swd</span><span class="p">[</span><span class="s2">&quot;mean_score&quot;</span><span class="p">])</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">swd_norm_p</span> <span class="o">=</span> <span class="n">shapiro</span><span class="p">(</span><span class="n">swd</span><span class="p">[</span><span class="s2">&quot;mean_score&quot;</span><span class="p">])</span>
+
+<span class="c1"># Print the results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Non-SWD group normality p-value:&quot;</span><span class="p">,</span> <span class="n">non_swd_norm_p</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SWD group normality p-value:&quot;</span><span class="p">,</span> <span class="n">swd_norm_p</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Non-SWD group normality p-value: 2.827576691049303e-20
+SWD group normality p-value: 4.271134461509381e-30
+</pre></div>
+</div>
+</div>
+</div>
+<p>We interpret the results of a Shapiro-Wilk test as follows:</p>
+<ul class="simple">
+<li><p>If the p-value is greater than 0.05 (which is the conventional threshold for statistical significance), then we fail to reject the null hypothesis that the data is normally distributed.  This means that the data is normally distributed.</p></li>
+<li><p>If the p-value is less than 0.05, then we reject the null hypothesis that the data is normally distributed.  This means that the data is not normally distributed.</p></li>
+</ul>
+<p>Therefore, the results of the Shapiro-Wilk test indicate that the data is <em>not</em> normally distributed.  This means that we should use a non-parametric alternative test instead of a Two-Way ANOVA test.</p>
+</section>
+<section id="u-checking-for-equal-variances-u">
+<h3><u><strong>Checking for Equal Variances</strong></u><a class="headerlink" href="#u-checking-for-equal-variances-u" title="Permalink to this heading">#</a></h3>
+<p>Below you will find a boxplot of the residuals which is used to check for equal variances.  If the residuals have the same variance, then the data is said to be homoscedastic.  If the residuals do not have the same variance, then the data is heteroscedastic.  If the data is heteroscedastic, then we should use a non-parametric alternative test instead of a Two-Way ANOVA test.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+
+<span class="c1"># Fit a linear regression model to the data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">formula</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;mean_score ~ group + boro&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df3</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Extract the residuals from the model</span>
+<span class="n">residuals</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">resid</span>
+
+<span class="c1"># Create boxplots of residuals for each group</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">residuals</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df3</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/6a8c203be03076a332035a3d816bc24df7d656189046ae55a435ca0d131e803d.png" src="../_images/6a8c203be03076a332035a3d816bc24df7d656189046ae55a435ca0d131e803d.png" />
+</div>
+</div>
+<p>At a quick glance, it appears that the swd group has a different variance than the other two groups.  However, if we are unsure, we can check this with statistical test from a built-in Pytnon package, called a Levene’s Test.  I will demonstrate how to do this below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">levene</span>
+
+<span class="c1"># Convert the &#39;boro&#39; and &#39;group&#39; columns back to their original form</span>
+<span class="n">boro</span> <span class="o">=</span> <span class="n">df3</span><span class="p">[</span><span class="s1">&#39;boro&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">values</span>
+<span class="n">group</span> <span class="o">=</span> <span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># Test for equal variances using Levene&#39;s test</span>
+<span class="n">levene_pvalue</span> <span class="o">=</span> <span class="n">levene</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;mean_score&#39;</span><span class="p">],</span> <span class="n">group</span><span class="p">,</span> <span class="n">boro</span><span class="p">)</span>
+
+<span class="c1"># Print the p-values of the equal variance test to 4 decimal places</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Levene&#39;s test p-value: </span><span class="si">{:.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">levene_pvalue</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Levene&#39;s test p-value: 0.0000
+</pre></div>
+</div>
+</div>
+</div>
+<p>We interpret a Levene’s Test as follows:</p>
+<ul class="simple">
+<li><p>If the p-value is greater than 0.05, then we fail to reject the null hypothesis that the residuals have the same variance.  This means that the residuals have the same variance.</p></li>
+<li><p>If the p-value is less than 0.05, then we reject the null hypothesis that the residuals have the same variance.  This means that the residuals do not have the same variance.</p></li>
+</ul>
+<p>Therefore, the results of the Levene’s Test indicate that the residuals do <em>not</em> have the same variance.  This means that we should use a non-parametric alternative test instead of a Two-Way ANOVA test.</p>
+</section>
+<section id="u-checking-for-independence-u">
+<h3><u><strong>Checking for Independence</strong></u><a class="headerlink" href="#u-checking-for-independence-u" title="Permalink to this heading">#</a></h3>
+<p>It should be noted that the observations for <code class="docutils literal notranslate"><span class="pre">mean_score</span></code> are the averages of all students at each school that are classified as either <code class="docutils literal notranslate"><span class="pre">non-swd</span></code>, or <code class="docutils literal notranslate"><span class="pre">swd</span></code>.  This is preliminary analysis for demonstration purposes and further analysis would be needed to work with weighted averages based on number of students tested in each group, etc.</p>
+<p>The observations are independent within and across the groups.  This means that the observations are not related or repeated.</p>
+<p>Despite the fact that the independence condition is met, the normality and equal variances conditions are not met. Therefore, we should use a non-parametric alternative test instead of a Two-Way ANOVA test.  The recommended test in this instance is a Friedman test because it is robust to violations of the normality and equal variances conditions. I will demonstrate how to run a Friedman test below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">friedmanchisquare</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Convert the &#39;boro&#39; and &#39;group&#39; columns to categorical variables</span>
+<span class="n">df3</span><span class="p">[</span><span class="s1">&#39;boro&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;boro&#39;</span><span class="p">])</span>
+<span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">])</span>
+
+<span class="c1"># Reshape the dataframe into a matrix</span>
+<span class="n">mat</span> <span class="o">=</span> <span class="n">df3</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="s1">&#39;mean_score&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;boro&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">)</span>
+
+<span class="c1"># Convert the matrix to a 2D numpy array</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+<span class="c1"># Run the Friedman test</span>
+<span class="n">stat</span><span class="p">,</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">friedmanchisquare</span><span class="p">(</span><span class="o">*</span><span class="n">arr</span><span class="p">)</span>
+
+<span class="c1"># Print the results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Friedman test statistic:&#39;</span><span class="p">,</span> <span class="n">stat</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Friedman test p-value:&#39;</span><span class="p">,</span> <span class="n">pval</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Friedman test statistic: 9.866666666666667
+Friedman test p-value: 0.04273456656933023
+</pre></div>
+</div>
+</div>
+</div>
+<p>We interpret a Friedman test as follows:</p>
+<ul class="simple">
+<li><p>If the p-value is greater than 0.05, then we fail to reject the null hypothesis that the mean ranks of the groups are equal.  This means that the mean ranks of the groups are equal.</p></li>
+<li><p>If the p-value of the test is less than 0.05, it means that there is strong evidence that the medians of the groups are different, and that the differences are unlikely to be due to chance.</p></li>
+</ul>
+<p>Therefore, the results of the Friedman test indicate that the mean ranks of the groups are unequal.  Obtaining this result is informative; however, it does not tell us which groups are different from one another.  To determine which groups are different from one another, we can run a post-hoc test.  The recommended post-hoc test in this case is a Dunn’s test because it is robust to violations of the normality and equal variances conditions.  I will demonstrate how to run a Dunn’s test below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pingouin</span> <span class="k">as</span> <span class="nn">pg</span>
+
+<span class="c1"># Convert the &#39;boro&#39; and &#39;group&#39; columns to categorical variables</span>
+<span class="n">df3</span><span class="p">[</span><span class="s1">&#39;boro&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;boro&#39;</span><span class="p">])</span>
+<span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">])</span>
+
+<span class="c1"># Perform the Friedman test</span>
+<span class="n">friedman</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">friedman</span><span class="p">(</span><span class="n">df3</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="s1">&#39;mean_score&#39;</span><span class="p">,</span> <span class="n">within</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="s1">&#39;boro&#39;</span><span class="p">)</span>
+
+<span class="c1"># Perform the post-hoc test using the Games-Howell test</span>
+<span class="n">posthoc</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">pairwise_ttests</span><span class="p">(</span><span class="n">df3</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="s1">&#39;mean_score&#39;</span><span class="p">,</span> <span class="n">between</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="s1">&#39;boro&#39;</span><span class="p">,</span> <span class="n">parametric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">padjust</span><span class="o">=</span><span class="s1">&#39;holm&#39;</span><span class="p">)</span>
+
+<span class="c1"># Print the results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Friedman test:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">friedman</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Games-Howell post-hoc test:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">posthoc</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Friedman test:
+         Source    W  ddof1     Q     p-unc
+Friedman  group  1.0      2  10.0  0.006738
+
+Games-Howell post-hoc test:
+  Contrast             A        B  Paired  Parametric      U-val alternative   
+0    group  all_students  non-swd   False       False  2322520.0   two-sided  \
+1    group  all_students      swd   False       False  4356140.0   two-sided   
+2    group       non-swd      swd   False       False  4656812.5   two-sided   
+
+           p-unc         p-corr p-adjust    hedges  
+0   1.520696e-25   1.520696e-25     holm -0.284717  
+1  1.065814e-233  2.131628e-233     holm  0.959712  
+2   0.000000e+00   0.000000e+00     holm  1.236349  
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/rwilcox/GitHub/newprojectnotebook/.venv/lib/python3.9/site-packages/pingouin/pairwise.py:28: UserWarning: pairwise_ttests is deprecated, use pairwise_tests instead.
+  warnings.warn(&quot;pairwise_ttests is deprecated, use pairwise_tests instead.&quot;, UserWarning)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install scikit-posthocs
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scikit_posthocs</span> <span class="k">as</span> <span class="nn">sp</span>
+
+
+
+<span class="c1"># Create a new column combining the &#39;group&#39; and &#39;boro&#39; columns</span>
+<span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group_boro&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">df3</span><span class="p">[</span><span class="s1">&#39;boro&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="c1"># Perform Dunn&#39;s test with Bonferroni correction</span>
+<span class="n">dunn_results</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">posthoc_dunn</span><span class="p">(</span><span class="n">df3</span><span class="p">,</span> <span class="n">val_col</span><span class="o">=</span><span class="s1">&#39;mean_score&#39;</span><span class="p">,</span> <span class="n">group_col</span><span class="o">=</span><span class="s1">&#39;group_boro&#39;</span><span class="p">,</span> <span class="n">p_adjust</span><span class="o">=</span><span class="s1">&#39;bonferroni&#39;</span><span class="p">)</span>
+
+<span class="c1"># Print the results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Results of Dunn</span><span class="se">\&#39;</span><span class="s1">s test with Bonferroni correction:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dunn_results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Convert the results to a pandas DataFrame</span>
+<span class="n">dunn_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dunn_results</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group_boro&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">df3</span><span class="p">[</span><span class="s1">&#39;group_boro&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+
+<span class="c1"># Display the DataFrame in a scrollable table</span>
+<span class="n">display</span><span class="p">(</span><span class="n">dunn_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>all_students_Manhattan</th>
+      <th>non-swd_Manhattan</th>
+      <th>swd_Manhattan</th>
+      <th>all_students_Bronx</th>
+      <th>non-swd_Bronx</th>
+      <th>swd_Bronx</th>
+      <th>all_students_Brooklyn</th>
+      <th>non-swd_Brooklyn</th>
+      <th>swd_Brooklyn</th>
+      <th>all_students_Queens</th>
+      <th>non-swd_Queens</th>
+      <th>swd_Queens</th>
+      <th>all_students_Staten Island</th>
+      <th>non-swd_Staten Island</th>
+      <th>swd_Staten Island</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>all_students_Manhattan</th>
+      <td>1.000000e+00</td>
+      <td>5.320756e-04</td>
+      <td>6.210021e-54</td>
+      <td>5.897563e-08</td>
+      <td>1.000000e+00</td>
+      <td>3.023428e-107</td>
+      <td>1.633135e-03</td>
+      <td>1.000000e+00</td>
+      <td>1.289680e-106</td>
+      <td>1.000000e+00</td>
+      <td>1.022103e-06</td>
+      <td>1.895027e-41</td>
+      <td>1.000000e+00</td>
+      <td>5.724252e-01</td>
+      <td>2.143676e-07</td>
+    </tr>
+    <tr>
+      <th>non-swd_Manhattan</th>
+      <td>5.320756e-04</td>
+      <td>1.000000e+00</td>
+      <td>8.727390e-90</td>
+      <td>4.255117e-23</td>
+      <td>2.444483e-04</td>
+      <td>4.120114e-151</td>
+      <td>1.752837e-16</td>
+      <td>4.095875e-02</td>
+      <td>7.206636e-154</td>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>4.566675e-66</td>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>9.370372e-12</td>
+    </tr>
+    <tr>
+      <th>swd_Manhattan</th>
+      <td>6.210021e-54</td>
+      <td>8.727390e-90</td>
+      <td>1.000000e+00</td>
+      <td>4.041817e-14</td>
+      <td>3.855373e-41</td>
+      <td>3.910156e-13</td>
+      <td>1.724048e-26</td>
+      <td>9.263255e-58</td>
+      <td>1.595446e-09</td>
+      <td>6.001310e-49</td>
+      <td>4.330376e-72</td>
+      <td>1.000000e+00</td>
+      <td>7.851538e-06</td>
+      <td>5.217127e-13</td>
+      <td>1.000000e+00</td>
+    </tr>
+    <tr>
+      <th>all_students_Bronx</th>
+      <td>5.897563e-08</td>
+      <td>4.255117e-23</td>
+      <td>4.041817e-14</td>
+      <td>1.000000e+00</td>
+      <td>2.071515e-05</td>
+      <td>1.819237e-47</td>
+      <td>1.000000e+00</td>
+      <td>4.961411e-10</td>
+      <td>1.927044e-43</td>
+      <td>8.833269e-12</td>
+      <td>1.243279e-23</td>
+      <td>2.263715e-13</td>
+      <td>1.000000e+00</td>
+      <td>9.579955e-05</td>
+      <td>1.699765e-02</td>
+    </tr>
+    <tr>
+      <th>non-swd_Bronx</th>
+      <td>1.000000e+00</td>
+      <td>2.444483e-04</td>
+      <td>3.855373e-41</td>
+      <td>2.071515e-05</td>
+      <td>1.000000e+00</td>
+      <td>6.984608e-87</td>
+      <td>7.375135e-02</td>
+      <td>1.000000e+00</td>
+      <td>3.809266e-84</td>
+      <td>4.503843e-01</td>
+      <td>4.786142e-07</td>
+      <td>4.755083e-34</td>
+      <td>1.000000e+00</td>
+      <td>3.351270e-01</td>
+      <td>1.035410e-06</td>
+    </tr>
+    <tr>
+      <th>swd_Bronx</th>
+      <td>3.023428e-107</td>
+      <td>4.120114e-151</td>
+      <td>3.910156e-13</td>
+      <td>1.819237e-47</td>
+      <td>6.984608e-87</td>
+      <td>1.000000e+00</td>
+      <td>4.059748e-69</td>
+      <td>3.346132e-111</td>
+      <td>1.000000e+00</td>
+      <td>6.179355e-92</td>
+      <td>8.317014e-121</td>
+      <td>2.493851e-05</td>
+      <td>7.886375e-14</td>
+      <td>1.066375e-23</td>
+      <td>1.000000e+00</td>
+    </tr>
+    <tr>
+      <th>all_students_Brooklyn</th>
+      <td>1.633135e-03</td>
+      <td>1.752837e-16</td>
+      <td>1.724048e-26</td>
+      <td>1.000000e+00</td>
+      <td>7.375135e-02</td>
+      <td>4.059748e-69</td>
+      <td>1.000000e+00</td>
+      <td>3.280244e-05</td>
+      <td>5.157505e-66</td>
+      <td>2.769619e-07</td>
+      <td>9.342787e-18</td>
+      <td>2.760377e-22</td>
+      <td>1.000000e+00</td>
+      <td>2.986190e-03</td>
+      <td>5.206861e-04</td>
+    </tr>
+    <tr>
+      <th>non-swd_Brooklyn</th>
+      <td>1.000000e+00</td>
+      <td>4.095875e-02</td>
+      <td>9.263255e-58</td>
+      <td>4.961411e-10</td>
+      <td>1.000000e+00</td>
+      <td>3.346132e-111</td>
+      <td>3.280244e-05</td>
+      <td>1.000000e+00</td>
+      <td>1.561337e-110</td>
+      <td>1.000000e+00</td>
+      <td>8.875940e-05</td>
+      <td>1.125063e-44</td>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>3.610468e-08</td>
+    </tr>
+    <tr>
+      <th>swd_Brooklyn</th>
+      <td>1.289680e-106</td>
+      <td>7.206636e-154</td>
+      <td>1.595446e-09</td>
+      <td>1.927044e-43</td>
+      <td>3.809266e-84</td>
+      <td>1.000000e+00</td>
+      <td>5.157505e-66</td>
+      <td>1.561337e-110</td>
+      <td>1.000000e+00</td>
+      <td>1.422106e-88</td>
+      <td>2.157784e-118</td>
+      <td>5.181175e-03</td>
+      <td>3.833687e-12</td>
+      <td>1.371111e-21</td>
+      <td>1.000000e+00</td>
+    </tr>
+    <tr>
+      <th>all_students_Queens</th>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>6.001310e-49</td>
+      <td>8.833269e-12</td>
+      <td>4.503843e-01</td>
+      <td>6.179355e-92</td>
+      <td>2.769619e-07</td>
+      <td>1.000000e+00</td>
+      <td>1.422106e-88</td>
+      <td>1.000000e+00</td>
+      <td>6.709424e-01</td>
+      <td>2.681057e-42</td>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>9.766963e-10</td>
+    </tr>
+    <tr>
+      <th>non-swd_Queens</th>
+      <td>1.022103e-06</td>
+      <td>1.000000e+00</td>
+      <td>4.330376e-72</td>
+      <td>1.243279e-23</td>
+      <td>4.786142e-07</td>
+      <td>8.317014e-121</td>
+      <td>9.342787e-18</td>
+      <td>8.875940e-05</td>
+      <td>2.157784e-118</td>
+      <td>6.709424e-01</td>
+      <td>1.000000e+00</td>
+      <td>1.574900e-60</td>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>7.248748e-14</td>
+    </tr>
+    <tr>
+      <th>swd_Queens</th>
+      <td>1.895027e-41</td>
+      <td>4.566675e-66</td>
+      <td>1.000000e+00</td>
+      <td>2.263715e-13</td>
+      <td>4.755083e-34</td>
+      <td>2.493851e-05</td>
+      <td>2.760377e-22</td>
+      <td>1.125063e-44</td>
+      <td>5.181175e-03</td>
+      <td>2.681057e-42</td>
+      <td>1.574900e-60</td>
+      <td>1.000000e+00</td>
+      <td>9.283213e-07</td>
+      <td>4.565674e-14</td>
+      <td>1.000000e+00</td>
+    </tr>
+    <tr>
+      <th>all_students_Staten Island</th>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>7.851538e-06</td>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>7.886375e-14</td>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>3.833687e-12</td>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>9.283213e-07</td>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>4.611901e-04</td>
+    </tr>
+    <tr>
+      <th>non-swd_Staten Island</th>
+      <td>5.724252e-01</td>
+      <td>1.000000e+00</td>
+      <td>5.217127e-13</td>
+      <td>9.579955e-05</td>
+      <td>3.351270e-01</td>
+      <td>1.066375e-23</td>
+      <td>2.986190e-03</td>
+      <td>1.000000e+00</td>
+      <td>1.371111e-21</td>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>4.565674e-14</td>
+      <td>1.000000e+00</td>
+      <td>1.000000e+00</td>
+      <td>1.992730e-08</td>
+    </tr>
+    <tr>
+      <th>swd_Staten Island</th>
+      <td>2.143676e-07</td>
+      <td>9.370372e-12</td>
+      <td>1.000000e+00</td>
+      <td>1.699765e-02</td>
+      <td>1.035410e-06</td>
+      <td>1.000000e+00</td>
+      <td>5.206861e-04</td>
+      <td>3.610468e-08</td>
+      <td>1.000000e+00</td>
+      <td>9.766963e-10</td>
+      <td>7.248748e-14</td>
+      <td>1.000000e+00</td>
+      <td>4.611901e-04</td>
+      <td>1.992730e-08</td>
+      <td>1.000000e+00</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#apply a function to highlight significant p-values</span>
+<span class="k">def</span> <span class="nf">highlight_sig</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;orange&#39;</span> <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="k">else</span> <span class="s1">&#39;lightgray&#39;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;background-color: </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s1">; color: black&#39;</span>
+
+<span class="c1">#apply the highlight_sig function to the dataframe</span>
+<span class="n">dunn_df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="n">highlight_sig</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style type="text/css">
+#T_59503_row0_col0, #T_59503_row0_col4, #T_59503_row0_col7, #T_59503_row0_col9, #T_59503_row0_col12, #T_59503_row0_col13, #T_59503_row1_col1, #T_59503_row1_col9, #T_59503_row1_col10, #T_59503_row1_col12, #T_59503_row1_col13, #T_59503_row2_col2, #T_59503_row2_col11, #T_59503_row2_col14, #T_59503_row3_col3, #T_59503_row3_col6, #T_59503_row3_col12, #T_59503_row4_col0, #T_59503_row4_col4, #T_59503_row4_col6, #T_59503_row4_col7, #T_59503_row4_col9, #T_59503_row4_col12, #T_59503_row4_col13, #T_59503_row5_col5, #T_59503_row5_col8, #T_59503_row5_col14, #T_59503_row6_col3, #T_59503_row6_col4, #T_59503_row6_col6, #T_59503_row6_col12, #T_59503_row7_col0, #T_59503_row7_col4, #T_59503_row7_col7, #T_59503_row7_col9, #T_59503_row7_col12, #T_59503_row7_col13, #T_59503_row8_col5, #T_59503_row8_col8, #T_59503_row8_col14, #T_59503_row9_col0, #T_59503_row9_col1, #T_59503_row9_col4, #T_59503_row9_col7, #T_59503_row9_col9, #T_59503_row9_col10, #T_59503_row9_col12, #T_59503_row9_col13, #T_59503_row10_col1, #T_59503_row10_col9, #T_59503_row10_col10, #T_59503_row10_col12, #T_59503_row10_col13, #T_59503_row11_col2, #T_59503_row11_col11, #T_59503_row11_col14, #T_59503_row12_col0, #T_59503_row12_col1, #T_59503_row12_col3, #T_59503_row12_col4, #T_59503_row12_col6, #T_59503_row12_col7, #T_59503_row12_col9, #T_59503_row12_col10, #T_59503_row12_col12, #T_59503_row12_col13, #T_59503_row13_col0, #T_59503_row13_col1, #T_59503_row13_col4, #T_59503_row13_col7, #T_59503_row13_col9, #T_59503_row13_col10, #T_59503_row13_col12, #T_59503_row13_col13, #T_59503_row14_col2, #T_59503_row14_col5, #T_59503_row14_col8, #T_59503_row14_col11, #T_59503_row14_col14 {
+  background-color: lightgray;
+  color: black;
+}
+#T_59503_row0_col1, #T_59503_row0_col2, #T_59503_row0_col3, #T_59503_row0_col5, #T_59503_row0_col6, #T_59503_row0_col8, #T_59503_row0_col10, #T_59503_row0_col11, #T_59503_row0_col14, #T_59503_row1_col0, #T_59503_row1_col2, #T_59503_row1_col3, #T_59503_row1_col4, #T_59503_row1_col5, #T_59503_row1_col6, #T_59503_row1_col7, #T_59503_row1_col8, #T_59503_row1_col11, #T_59503_row1_col14, #T_59503_row2_col0, #T_59503_row2_col1, #T_59503_row2_col3, #T_59503_row2_col4, #T_59503_row2_col5, #T_59503_row2_col6, #T_59503_row2_col7, #T_59503_row2_col8, #T_59503_row2_col9, #T_59503_row2_col10, #T_59503_row2_col12, #T_59503_row2_col13, #T_59503_row3_col0, #T_59503_row3_col1, #T_59503_row3_col2, #T_59503_row3_col4, #T_59503_row3_col5, #T_59503_row3_col7, #T_59503_row3_col8, #T_59503_row3_col9, #T_59503_row3_col10, #T_59503_row3_col11, #T_59503_row3_col13, #T_59503_row3_col14, #T_59503_row4_col1, #T_59503_row4_col2, #T_59503_row4_col3, #T_59503_row4_col5, #T_59503_row4_col8, #T_59503_row4_col10, #T_59503_row4_col11, #T_59503_row4_col14, #T_59503_row5_col0, #T_59503_row5_col1, #T_59503_row5_col2, #T_59503_row5_col3, #T_59503_row5_col4, #T_59503_row5_col6, #T_59503_row5_col7, #T_59503_row5_col9, #T_59503_row5_col10, #T_59503_row5_col11, #T_59503_row5_col12, #T_59503_row5_col13, #T_59503_row6_col0, #T_59503_row6_col1, #T_59503_row6_col2, #T_59503_row6_col5, #T_59503_row6_col7, #T_59503_row6_col8, #T_59503_row6_col9, #T_59503_row6_col10, #T_59503_row6_col11, #T_59503_row6_col13, #T_59503_row6_col14, #T_59503_row7_col1, #T_59503_row7_col2, #T_59503_row7_col3, #T_59503_row7_col5, #T_59503_row7_col6, #T_59503_row7_col8, #T_59503_row7_col10, #T_59503_row7_col11, #T_59503_row7_col14, #T_59503_row8_col0, #T_59503_row8_col1, #T_59503_row8_col2, #T_59503_row8_col3, #T_59503_row8_col4, #T_59503_row8_col6, #T_59503_row8_col7, #T_59503_row8_col9, #T_59503_row8_col10, #T_59503_row8_col11, #T_59503_row8_col12, #T_59503_row8_col13, #T_59503_row9_col2, #T_59503_row9_col3, #T_59503_row9_col5, #T_59503_row9_col6, #T_59503_row9_col8, #T_59503_row9_col11, #T_59503_row9_col14, #T_59503_row10_col0, #T_59503_row10_col2, #T_59503_row10_col3, #T_59503_row10_col4, #T_59503_row10_col5, #T_59503_row10_col6, #T_59503_row10_col7, #T_59503_row10_col8, #T_59503_row10_col11, #T_59503_row10_col14, #T_59503_row11_col0, #T_59503_row11_col1, #T_59503_row11_col3, #T_59503_row11_col4, #T_59503_row11_col5, #T_59503_row11_col6, #T_59503_row11_col7, #T_59503_row11_col8, #T_59503_row11_col9, #T_59503_row11_col10, #T_59503_row11_col12, #T_59503_row11_col13, #T_59503_row12_col2, #T_59503_row12_col5, #T_59503_row12_col8, #T_59503_row12_col11, #T_59503_row12_col14, #T_59503_row13_col2, #T_59503_row13_col3, #T_59503_row13_col5, #T_59503_row13_col6, #T_59503_row13_col8, #T_59503_row13_col11, #T_59503_row13_col14, #T_59503_row14_col0, #T_59503_row14_col1, #T_59503_row14_col3, #T_59503_row14_col4, #T_59503_row14_col6, #T_59503_row14_col7, #T_59503_row14_col9, #T_59503_row14_col10, #T_59503_row14_col12, #T_59503_row14_col13 {
+  background-color: orange;
+  color: black;
+}
+</style>
+<table id="T_59503">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_59503_level0_col0" class="col_heading level0 col0" >all_students_Manhattan</th>
+      <th id="T_59503_level0_col1" class="col_heading level0 col1" >non-swd_Manhattan</th>
+      <th id="T_59503_level0_col2" class="col_heading level0 col2" >swd_Manhattan</th>
+      <th id="T_59503_level0_col3" class="col_heading level0 col3" >all_students_Bronx</th>
+      <th id="T_59503_level0_col4" class="col_heading level0 col4" >non-swd_Bronx</th>
+      <th id="T_59503_level0_col5" class="col_heading level0 col5" >swd_Bronx</th>
+      <th id="T_59503_level0_col6" class="col_heading level0 col6" >all_students_Brooklyn</th>
+      <th id="T_59503_level0_col7" class="col_heading level0 col7" >non-swd_Brooklyn</th>
+      <th id="T_59503_level0_col8" class="col_heading level0 col8" >swd_Brooklyn</th>
+      <th id="T_59503_level0_col9" class="col_heading level0 col9" >all_students_Queens</th>
+      <th id="T_59503_level0_col10" class="col_heading level0 col10" >non-swd_Queens</th>
+      <th id="T_59503_level0_col11" class="col_heading level0 col11" >swd_Queens</th>
+      <th id="T_59503_level0_col12" class="col_heading level0 col12" >all_students_Staten Island</th>
+      <th id="T_59503_level0_col13" class="col_heading level0 col13" >non-swd_Staten Island</th>
+      <th id="T_59503_level0_col14" class="col_heading level0 col14" >swd_Staten Island</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_59503_level0_row0" class="row_heading level0 row0" >all_students_Manhattan</th>
+      <td id="T_59503_row0_col0" class="data row0 col0" >1.000000</td>
+      <td id="T_59503_row0_col1" class="data row0 col1" >0.000532</td>
+      <td id="T_59503_row0_col2" class="data row0 col2" >0.000000</td>
+      <td id="T_59503_row0_col3" class="data row0 col3" >0.000000</td>
+      <td id="T_59503_row0_col4" class="data row0 col4" >1.000000</td>
+      <td id="T_59503_row0_col5" class="data row0 col5" >0.000000</td>
+      <td id="T_59503_row0_col6" class="data row0 col6" >0.001633</td>
+      <td id="T_59503_row0_col7" class="data row0 col7" >1.000000</td>
+      <td id="T_59503_row0_col8" class="data row0 col8" >0.000000</td>
+      <td id="T_59503_row0_col9" class="data row0 col9" >1.000000</td>
+      <td id="T_59503_row0_col10" class="data row0 col10" >0.000001</td>
+      <td id="T_59503_row0_col11" class="data row0 col11" >0.000000</td>
+      <td id="T_59503_row0_col12" class="data row0 col12" >1.000000</td>
+      <td id="T_59503_row0_col13" class="data row0 col13" >0.572425</td>
+      <td id="T_59503_row0_col14" class="data row0 col14" >0.000000</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row1" class="row_heading level0 row1" >non-swd_Manhattan</th>
+      <td id="T_59503_row1_col0" class="data row1 col0" >0.000532</td>
+      <td id="T_59503_row1_col1" class="data row1 col1" >1.000000</td>
+      <td id="T_59503_row1_col2" class="data row1 col2" >0.000000</td>
+      <td id="T_59503_row1_col3" class="data row1 col3" >0.000000</td>
+      <td id="T_59503_row1_col4" class="data row1 col4" >0.000244</td>
+      <td id="T_59503_row1_col5" class="data row1 col5" >0.000000</td>
+      <td id="T_59503_row1_col6" class="data row1 col6" >0.000000</td>
+      <td id="T_59503_row1_col7" class="data row1 col7" >0.040959</td>
+      <td id="T_59503_row1_col8" class="data row1 col8" >0.000000</td>
+      <td id="T_59503_row1_col9" class="data row1 col9" >1.000000</td>
+      <td id="T_59503_row1_col10" class="data row1 col10" >1.000000</td>
+      <td id="T_59503_row1_col11" class="data row1 col11" >0.000000</td>
+      <td id="T_59503_row1_col12" class="data row1 col12" >1.000000</td>
+      <td id="T_59503_row1_col13" class="data row1 col13" >1.000000</td>
+      <td id="T_59503_row1_col14" class="data row1 col14" >0.000000</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row2" class="row_heading level0 row2" >swd_Manhattan</th>
+      <td id="T_59503_row2_col0" class="data row2 col0" >0.000000</td>
+      <td id="T_59503_row2_col1" class="data row2 col1" >0.000000</td>
+      <td id="T_59503_row2_col2" class="data row2 col2" >1.000000</td>
+      <td id="T_59503_row2_col3" class="data row2 col3" >0.000000</td>
+      <td id="T_59503_row2_col4" class="data row2 col4" >0.000000</td>
+      <td id="T_59503_row2_col5" class="data row2 col5" >0.000000</td>
+      <td id="T_59503_row2_col6" class="data row2 col6" >0.000000</td>
+      <td id="T_59503_row2_col7" class="data row2 col7" >0.000000</td>
+      <td id="T_59503_row2_col8" class="data row2 col8" >0.000000</td>
+      <td id="T_59503_row2_col9" class="data row2 col9" >0.000000</td>
+      <td id="T_59503_row2_col10" class="data row2 col10" >0.000000</td>
+      <td id="T_59503_row2_col11" class="data row2 col11" >1.000000</td>
+      <td id="T_59503_row2_col12" class="data row2 col12" >0.000008</td>
+      <td id="T_59503_row2_col13" class="data row2 col13" >0.000000</td>
+      <td id="T_59503_row2_col14" class="data row2 col14" >1.000000</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row3" class="row_heading level0 row3" >all_students_Bronx</th>
+      <td id="T_59503_row3_col0" class="data row3 col0" >0.000000</td>
+      <td id="T_59503_row3_col1" class="data row3 col1" >0.000000</td>
+      <td id="T_59503_row3_col2" class="data row3 col2" >0.000000</td>
+      <td id="T_59503_row3_col3" class="data row3 col3" >1.000000</td>
+      <td id="T_59503_row3_col4" class="data row3 col4" >0.000021</td>
+      <td id="T_59503_row3_col5" class="data row3 col5" >0.000000</td>
+      <td id="T_59503_row3_col6" class="data row3 col6" >1.000000</td>
+      <td id="T_59503_row3_col7" class="data row3 col7" >0.000000</td>
+      <td id="T_59503_row3_col8" class="data row3 col8" >0.000000</td>
+      <td id="T_59503_row3_col9" class="data row3 col9" >0.000000</td>
+      <td id="T_59503_row3_col10" class="data row3 col10" >0.000000</td>
+      <td id="T_59503_row3_col11" class="data row3 col11" >0.000000</td>
+      <td id="T_59503_row3_col12" class="data row3 col12" >1.000000</td>
+      <td id="T_59503_row3_col13" class="data row3 col13" >0.000096</td>
+      <td id="T_59503_row3_col14" class="data row3 col14" >0.016998</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row4" class="row_heading level0 row4" >non-swd_Bronx</th>
+      <td id="T_59503_row4_col0" class="data row4 col0" >1.000000</td>
+      <td id="T_59503_row4_col1" class="data row4 col1" >0.000244</td>
+      <td id="T_59503_row4_col2" class="data row4 col2" >0.000000</td>
+      <td id="T_59503_row4_col3" class="data row4 col3" >0.000021</td>
+      <td id="T_59503_row4_col4" class="data row4 col4" >1.000000</td>
+      <td id="T_59503_row4_col5" class="data row4 col5" >0.000000</td>
+      <td id="T_59503_row4_col6" class="data row4 col6" >0.073751</td>
+      <td id="T_59503_row4_col7" class="data row4 col7" >1.000000</td>
+      <td id="T_59503_row4_col8" class="data row4 col8" >0.000000</td>
+      <td id="T_59503_row4_col9" class="data row4 col9" >0.450384</td>
+      <td id="T_59503_row4_col10" class="data row4 col10" >0.000000</td>
+      <td id="T_59503_row4_col11" class="data row4 col11" >0.000000</td>
+      <td id="T_59503_row4_col12" class="data row4 col12" >1.000000</td>
+      <td id="T_59503_row4_col13" class="data row4 col13" >0.335127</td>
+      <td id="T_59503_row4_col14" class="data row4 col14" >0.000001</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row5" class="row_heading level0 row5" >swd_Bronx</th>
+      <td id="T_59503_row5_col0" class="data row5 col0" >0.000000</td>
+      <td id="T_59503_row5_col1" class="data row5 col1" >0.000000</td>
+      <td id="T_59503_row5_col2" class="data row5 col2" >0.000000</td>
+      <td id="T_59503_row5_col3" class="data row5 col3" >0.000000</td>
+      <td id="T_59503_row5_col4" class="data row5 col4" >0.000000</td>
+      <td id="T_59503_row5_col5" class="data row5 col5" >1.000000</td>
+      <td id="T_59503_row5_col6" class="data row5 col6" >0.000000</td>
+      <td id="T_59503_row5_col7" class="data row5 col7" >0.000000</td>
+      <td id="T_59503_row5_col8" class="data row5 col8" >1.000000</td>
+      <td id="T_59503_row5_col9" class="data row5 col9" >0.000000</td>
+      <td id="T_59503_row5_col10" class="data row5 col10" >0.000000</td>
+      <td id="T_59503_row5_col11" class="data row5 col11" >0.000025</td>
+      <td id="T_59503_row5_col12" class="data row5 col12" >0.000000</td>
+      <td id="T_59503_row5_col13" class="data row5 col13" >0.000000</td>
+      <td id="T_59503_row5_col14" class="data row5 col14" >1.000000</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row6" class="row_heading level0 row6" >all_students_Brooklyn</th>
+      <td id="T_59503_row6_col0" class="data row6 col0" >0.001633</td>
+      <td id="T_59503_row6_col1" class="data row6 col1" >0.000000</td>
+      <td id="T_59503_row6_col2" class="data row6 col2" >0.000000</td>
+      <td id="T_59503_row6_col3" class="data row6 col3" >1.000000</td>
+      <td id="T_59503_row6_col4" class="data row6 col4" >0.073751</td>
+      <td id="T_59503_row6_col5" class="data row6 col5" >0.000000</td>
+      <td id="T_59503_row6_col6" class="data row6 col6" >1.000000</td>
+      <td id="T_59503_row6_col7" class="data row6 col7" >0.000033</td>
+      <td id="T_59503_row6_col8" class="data row6 col8" >0.000000</td>
+      <td id="T_59503_row6_col9" class="data row6 col9" >0.000000</td>
+      <td id="T_59503_row6_col10" class="data row6 col10" >0.000000</td>
+      <td id="T_59503_row6_col11" class="data row6 col11" >0.000000</td>
+      <td id="T_59503_row6_col12" class="data row6 col12" >1.000000</td>
+      <td id="T_59503_row6_col13" class="data row6 col13" >0.002986</td>
+      <td id="T_59503_row6_col14" class="data row6 col14" >0.000521</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row7" class="row_heading level0 row7" >non-swd_Brooklyn</th>
+      <td id="T_59503_row7_col0" class="data row7 col0" >1.000000</td>
+      <td id="T_59503_row7_col1" class="data row7 col1" >0.040959</td>
+      <td id="T_59503_row7_col2" class="data row7 col2" >0.000000</td>
+      <td id="T_59503_row7_col3" class="data row7 col3" >0.000000</td>
+      <td id="T_59503_row7_col4" class="data row7 col4" >1.000000</td>
+      <td id="T_59503_row7_col5" class="data row7 col5" >0.000000</td>
+      <td id="T_59503_row7_col6" class="data row7 col6" >0.000033</td>
+      <td id="T_59503_row7_col7" class="data row7 col7" >1.000000</td>
+      <td id="T_59503_row7_col8" class="data row7 col8" >0.000000</td>
+      <td id="T_59503_row7_col9" class="data row7 col9" >1.000000</td>
+      <td id="T_59503_row7_col10" class="data row7 col10" >0.000089</td>
+      <td id="T_59503_row7_col11" class="data row7 col11" >0.000000</td>
+      <td id="T_59503_row7_col12" class="data row7 col12" >1.000000</td>
+      <td id="T_59503_row7_col13" class="data row7 col13" >1.000000</td>
+      <td id="T_59503_row7_col14" class="data row7 col14" >0.000000</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row8" class="row_heading level0 row8" >swd_Brooklyn</th>
+      <td id="T_59503_row8_col0" class="data row8 col0" >0.000000</td>
+      <td id="T_59503_row8_col1" class="data row8 col1" >0.000000</td>
+      <td id="T_59503_row8_col2" class="data row8 col2" >0.000000</td>
+      <td id="T_59503_row8_col3" class="data row8 col3" >0.000000</td>
+      <td id="T_59503_row8_col4" class="data row8 col4" >0.000000</td>
+      <td id="T_59503_row8_col5" class="data row8 col5" >1.000000</td>
+      <td id="T_59503_row8_col6" class="data row8 col6" >0.000000</td>
+      <td id="T_59503_row8_col7" class="data row8 col7" >0.000000</td>
+      <td id="T_59503_row8_col8" class="data row8 col8" >1.000000</td>
+      <td id="T_59503_row8_col9" class="data row8 col9" >0.000000</td>
+      <td id="T_59503_row8_col10" class="data row8 col10" >0.000000</td>
+      <td id="T_59503_row8_col11" class="data row8 col11" >0.005181</td>
+      <td id="T_59503_row8_col12" class="data row8 col12" >0.000000</td>
+      <td id="T_59503_row8_col13" class="data row8 col13" >0.000000</td>
+      <td id="T_59503_row8_col14" class="data row8 col14" >1.000000</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row9" class="row_heading level0 row9" >all_students_Queens</th>
+      <td id="T_59503_row9_col0" class="data row9 col0" >1.000000</td>
+      <td id="T_59503_row9_col1" class="data row9 col1" >1.000000</td>
+      <td id="T_59503_row9_col2" class="data row9 col2" >0.000000</td>
+      <td id="T_59503_row9_col3" class="data row9 col3" >0.000000</td>
+      <td id="T_59503_row9_col4" class="data row9 col4" >0.450384</td>
+      <td id="T_59503_row9_col5" class="data row9 col5" >0.000000</td>
+      <td id="T_59503_row9_col6" class="data row9 col6" >0.000000</td>
+      <td id="T_59503_row9_col7" class="data row9 col7" >1.000000</td>
+      <td id="T_59503_row9_col8" class="data row9 col8" >0.000000</td>
+      <td id="T_59503_row9_col9" class="data row9 col9" >1.000000</td>
+      <td id="T_59503_row9_col10" class="data row9 col10" >0.670942</td>
+      <td id="T_59503_row9_col11" class="data row9 col11" >0.000000</td>
+      <td id="T_59503_row9_col12" class="data row9 col12" >1.000000</td>
+      <td id="T_59503_row9_col13" class="data row9 col13" >1.000000</td>
+      <td id="T_59503_row9_col14" class="data row9 col14" >0.000000</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row10" class="row_heading level0 row10" >non-swd_Queens</th>
+      <td id="T_59503_row10_col0" class="data row10 col0" >0.000001</td>
+      <td id="T_59503_row10_col1" class="data row10 col1" >1.000000</td>
+      <td id="T_59503_row10_col2" class="data row10 col2" >0.000000</td>
+      <td id="T_59503_row10_col3" class="data row10 col3" >0.000000</td>
+      <td id="T_59503_row10_col4" class="data row10 col4" >0.000000</td>
+      <td id="T_59503_row10_col5" class="data row10 col5" >0.000000</td>
+      <td id="T_59503_row10_col6" class="data row10 col6" >0.000000</td>
+      <td id="T_59503_row10_col7" class="data row10 col7" >0.000089</td>
+      <td id="T_59503_row10_col8" class="data row10 col8" >0.000000</td>
+      <td id="T_59503_row10_col9" class="data row10 col9" >0.670942</td>
+      <td id="T_59503_row10_col10" class="data row10 col10" >1.000000</td>
+      <td id="T_59503_row10_col11" class="data row10 col11" >0.000000</td>
+      <td id="T_59503_row10_col12" class="data row10 col12" >1.000000</td>
+      <td id="T_59503_row10_col13" class="data row10 col13" >1.000000</td>
+      <td id="T_59503_row10_col14" class="data row10 col14" >0.000000</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row11" class="row_heading level0 row11" >swd_Queens</th>
+      <td id="T_59503_row11_col0" class="data row11 col0" >0.000000</td>
+      <td id="T_59503_row11_col1" class="data row11 col1" >0.000000</td>
+      <td id="T_59503_row11_col2" class="data row11 col2" >1.000000</td>
+      <td id="T_59503_row11_col3" class="data row11 col3" >0.000000</td>
+      <td id="T_59503_row11_col4" class="data row11 col4" >0.000000</td>
+      <td id="T_59503_row11_col5" class="data row11 col5" >0.000025</td>
+      <td id="T_59503_row11_col6" class="data row11 col6" >0.000000</td>
+      <td id="T_59503_row11_col7" class="data row11 col7" >0.000000</td>
+      <td id="T_59503_row11_col8" class="data row11 col8" >0.005181</td>
+      <td id="T_59503_row11_col9" class="data row11 col9" >0.000000</td>
+      <td id="T_59503_row11_col10" class="data row11 col10" >0.000000</td>
+      <td id="T_59503_row11_col11" class="data row11 col11" >1.000000</td>
+      <td id="T_59503_row11_col12" class="data row11 col12" >0.000001</td>
+      <td id="T_59503_row11_col13" class="data row11 col13" >0.000000</td>
+      <td id="T_59503_row11_col14" class="data row11 col14" >1.000000</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row12" class="row_heading level0 row12" >all_students_Staten Island</th>
+      <td id="T_59503_row12_col0" class="data row12 col0" >1.000000</td>
+      <td id="T_59503_row12_col1" class="data row12 col1" >1.000000</td>
+      <td id="T_59503_row12_col2" class="data row12 col2" >0.000008</td>
+      <td id="T_59503_row12_col3" class="data row12 col3" >1.000000</td>
+      <td id="T_59503_row12_col4" class="data row12 col4" >1.000000</td>
+      <td id="T_59503_row12_col5" class="data row12 col5" >0.000000</td>
+      <td id="T_59503_row12_col6" class="data row12 col6" >1.000000</td>
+      <td id="T_59503_row12_col7" class="data row12 col7" >1.000000</td>
+      <td id="T_59503_row12_col8" class="data row12 col8" >0.000000</td>
+      <td id="T_59503_row12_col9" class="data row12 col9" >1.000000</td>
+      <td id="T_59503_row12_col10" class="data row12 col10" >1.000000</td>
+      <td id="T_59503_row12_col11" class="data row12 col11" >0.000001</td>
+      <td id="T_59503_row12_col12" class="data row12 col12" >1.000000</td>
+      <td id="T_59503_row12_col13" class="data row12 col13" >1.000000</td>
+      <td id="T_59503_row12_col14" class="data row12 col14" >0.000461</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row13" class="row_heading level0 row13" >non-swd_Staten Island</th>
+      <td id="T_59503_row13_col0" class="data row13 col0" >0.572425</td>
+      <td id="T_59503_row13_col1" class="data row13 col1" >1.000000</td>
+      <td id="T_59503_row13_col2" class="data row13 col2" >0.000000</td>
+      <td id="T_59503_row13_col3" class="data row13 col3" >0.000096</td>
+      <td id="T_59503_row13_col4" class="data row13 col4" >0.335127</td>
+      <td id="T_59503_row13_col5" class="data row13 col5" >0.000000</td>
+      <td id="T_59503_row13_col6" class="data row13 col6" >0.002986</td>
+      <td id="T_59503_row13_col7" class="data row13 col7" >1.000000</td>
+      <td id="T_59503_row13_col8" class="data row13 col8" >0.000000</td>
+      <td id="T_59503_row13_col9" class="data row13 col9" >1.000000</td>
+      <td id="T_59503_row13_col10" class="data row13 col10" >1.000000</td>
+      <td id="T_59503_row13_col11" class="data row13 col11" >0.000000</td>
+      <td id="T_59503_row13_col12" class="data row13 col12" >1.000000</td>
+      <td id="T_59503_row13_col13" class="data row13 col13" >1.000000</td>
+      <td id="T_59503_row13_col14" class="data row13 col14" >0.000000</td>
+    </tr>
+    <tr>
+      <th id="T_59503_level0_row14" class="row_heading level0 row14" >swd_Staten Island</th>
+      <td id="T_59503_row14_col0" class="data row14 col0" >0.000000</td>
+      <td id="T_59503_row14_col1" class="data row14 col1" >0.000000</td>
+      <td id="T_59503_row14_col2" class="data row14 col2" >1.000000</td>
+      <td id="T_59503_row14_col3" class="data row14 col3" >0.016998</td>
+      <td id="T_59503_row14_col4" class="data row14 col4" >0.000001</td>
+      <td id="T_59503_row14_col5" class="data row14 col5" >1.000000</td>
+      <td id="T_59503_row14_col6" class="data row14 col6" >0.000521</td>
+      <td id="T_59503_row14_col7" class="data row14 col7" >0.000000</td>
+      <td id="T_59503_row14_col8" class="data row14 col8" >1.000000</td>
+      <td id="T_59503_row14_col9" class="data row14 col9" >0.000000</td>
+      <td id="T_59503_row14_col10" class="data row14 col10" >0.000000</td>
+      <td id="T_59503_row14_col11" class="data row14 col11" >1.000000</td>
+      <td id="T_59503_row14_col12" class="data row14 col12" >0.000461</td>
+      <td id="T_59503_row14_col13" class="data row14 col13" >0.000000</td>
+      <td id="T_59503_row14_col14" class="data row14 col14" >1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./content"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="atkinson-segregation-index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Analyzing Segregation in NYC Schools</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dissimilarity-index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Calculating Dissimilarity Indices</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-goal-for-this-notebook-is-to-demonstrate-the-following">The goal for this notebook is to demonstrate the following:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-getting-the-data-prepared-u"><u><strong>Getting the Data Prepared</strong></u></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-what-is-two-way-anova-u"><u><strong>What is Two-Way ANOVA?</strong></u></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-why-is-a-two-way-anova-test-appropriate-u"><u><strong>Why is a Two-Way ANOVA Test Appropriate?</strong></u></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#u-checking-the-conditions-for-a-two-way-anova-test-u"><u><strong>Checking the Conditions for a Two-Way ANOVA Test</strong></u></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#u-checking-for-normality-u"><u><strong>Checking for Normality</strong></u></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#u-checking-for-equal-variances-u"><u><strong>Checking for Equal Variances</strong></u></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#u-checking-for-independence-u"><u><strong>Checking for Independence</strong></u></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Robert Wilcox
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
