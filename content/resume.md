@@ -2,7 +2,9 @@
 
 (631) 988 - 5788 | robwilcox23@gmail.com | 67 Dunwoodie	Ave., West Islip, NY	
 
-#### Professional Experience
+---
+
+#### <u>Professional Experience</u>
 
 ##### MATHEMATICS TEACHER | ST. ANTHONY’S HIGH SCHOOL (S. HUNTINGTON, NY) | 2009 – PRESENT
 
@@ -16,13 +18,13 @@ versatility	and	breadth	of	knowledge, with a specialized emphasis on AP Statisti
 * Maintained thorough records and student data, showcasing strong organizational and data management skills.
 * Fostered an environment that encouraged questions	and	intellectual curiosity,	showcasing leadership and communication	skills.
 
-#### Education
+#### <u>Education</u>
 
-##### MA	IN EDUCATIONAL TECHNOLOGY | ADELPHI	UNIVERSITY (GARDEN CITY, NY) | 2023		
+##### MA IN EDUCATIONAL TECHNOLOGY | ADELPHI UNIVERSITY (GARDEN CITY, NY) | 2023		
 
-##### BS	IN MATHEMATICS | ST. JOSEPH’S UNIVERSITY (PATCHOGUE, NY) | 2009	
+##### BS IN MATHEMATICS | ST. JOSEPH’S UNIVERSITY (PATCHOGUE, NY) | 2009	
 
-#### Projects
+#### <u>Projects</u>
 
 ##### COLLABORATOR | NYC	OPEN SCHOOLS DATA PORTAL | JAN 2022 - PRESENT
 
@@ -33,7 +35,7 @@ versatility	and	breadth	of	knowledge, with a specialized emphasis on AP Statisti
 * Translated intricate data	science	details into user-friendly formats,	enhancing the accessibility	of the project.
 * Presented	project	findings and methodologies at NYC Open Data	Week, demonstrating	strong communication skills	and	the	ability	to convey complex data	science	concepts to diverse	audiences.
 
-#### Skills & Abilities
+#### <u>Skills & Abilities</u>
 
 * Excellent	Oral and Written Communication
 * Problem-Solving
