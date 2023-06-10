@@ -5,8 +5,7 @@
 ---
 
 #### <u>Professional Experience</u>
-
-##### MATHEMATICS TEACHER | ST. ANTHONY’S HIGH SCHOOL (S. HUNTINGTON, NY) | 2009 – PRESENT
+###### MATHEMATICS TEACHER | ST. ANTHONY’S HIGH SCHOOL (S. HUNTINGTON, NY) | 2009 – PRESENT
 
 * Delivered	comprehensive instruction across a range of	high school	mathematics	courses, demonstrating	
 versatility	and	breadth	of	knowledge, with a specialized emphasis on AP Statistics and AP Calculus over the past several years.
@@ -18,14 +17,16 @@ versatility	and	breadth	of	knowledge, with a specialized emphasis on AP Statisti
 * Maintained thorough records and student data, showcasing strong organizational and data management skills.
 * Fostered an environment that encouraged questions	and	intellectual curiosity,	showcasing leadership and communication	skills.
 
-#### <u>Education</u>
+---
 
+#### <u>Education</u>
 ##### MA IN EDUCATIONAL TECHNOLOGY | ADELPHI UNIVERSITY (GARDEN CITY, NY) | 2023		
 
 ##### BS IN MATHEMATICS | ST. JOSEPH’S UNIVERSITY (PATCHOGUE, NY) | 2009	
 
-#### <u>Projects</u>
+---
 
+#### <u>Projects</u>
 ##### COLLABORATOR | NYC	OPEN SCHOOLS DATA PORTAL | JAN 2022 - PRESENT
 
 * Invited to contribute	to a significant data science project during my graduate program and collaborated with a multidisciplinary team	to make data on New	York City schools more accessible and comprehensible to	novice users.
@@ -34,6 +35,8 @@ versatility	and	breadth	of	knowledge, with a specialized emphasis on AP Statisti
 * Developed	Python scripts and	Jupyter	notebooks to demonstrate data handling concepts, contributing to the project's educational objectives.
 * Translated intricate data	science	details into user-friendly formats,	enhancing the accessibility	of the project.
 * Presented	project	findings and methodologies at NYC Open Data	Week, demonstrating	strong communication skills	and	the	ability	to convey complex data	science	concepts to diverse	audiences.
+
+---
 
 #### <u>Skills & Abilities</u>
 
