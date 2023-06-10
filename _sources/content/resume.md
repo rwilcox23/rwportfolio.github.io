@@ -20,14 +20,14 @@ versatility	and	breadth	of	knowledge, with a specialized emphasis on AP Statisti
 ---
 
 #### <u>Education</u>
-##### MA IN EDUCATIONAL TECHNOLOGY | ADELPHI UNIVERSITY (GARDEN CITY, NY) | 2023		
+###### MA IN EDUCATIONAL TECHNOLOGY | ADELPHI UNIVERSITY (GARDEN CITY, NY) | 2023		
 
-##### BS IN MATHEMATICS | ST. JOSEPH’S UNIVERSITY (PATCHOGUE, NY) | 2009	
+###### BS IN MATHEMATICS | ST. JOSEPH’S UNIVERSITY (PATCHOGUE, NY) | 2009	
 
 ---
 
 #### <u>Projects</u>
-##### COLLABORATOR | NYC	OPEN SCHOOLS DATA PORTAL | JAN 2022 - PRESENT
+###### COLLABORATOR | NYC	OPEN SCHOOLS DATA PORTAL | JAN 2022 - PRESENT
 
 * Invited to contribute	to a significant data science project during my graduate program and collaborated with a multidisciplinary team	to make data on New	York City schools more accessible and comprehensible to	novice users.
 * Conducted	comprehensive data analyses	using Python and data science packages including pandas	and	NumPy.
